@@ -7,6 +7,7 @@ import domo from "ryuu.js";
 export interface AppContextType {
     domainCredits: () => Promise<string>;
     topCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
+    lowCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(
@@ -38,13 +39,27 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         }));
     }
 
+    const lowCreditUsers = async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
+        const res = await domo.post('/sql/v1/credits_tracker',
+            'SELECT User_ID, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY User_ID ORDER BY total_credits ASC LIMIT 5', {
+            contentType: 'text/plain'
+        }) as DomoResponse;
+
+        const rows = res?.rows ?? [];
+        return rows.map((row) => ({
+            User_ID: String(row?.[0] ?? ""),
+            total_credits: Number(row?.[1] ?? 0),
+        }));
+    }
 
     const value = useMemo(() => {
         return {
             domainCredits,
-            topCreditUsers
+            topCreditUsers,
+            lowCreditUsers
+
         };
-    }, [domainCredits, topCreditUsers]);
+    }, [domainCredits, topCreditUsers, lowCreditUsers]);
 
     return (
         <AppContext.Provider

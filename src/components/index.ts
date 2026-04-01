@@ -7,3 +7,4 @@ export { nodeTypes } from "./custom_node/root_node";
 export { default as ChartInitializer } from "./charts/chart_init";
 export { default as Loader } from "./utils/loader"
 export { default as TopCreditUsage } from "./dashboard/kpi's/top_credit_users"
+export { default as LowCreditUsage } from "./dashboard/kpi's/low_credit_users"

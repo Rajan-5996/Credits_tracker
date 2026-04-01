@@ -10,6 +10,7 @@ export interface UserContextType {
   customer: string;
   host: string;
   loading: boolean;
+  getUserName: (userId: string) => Promise<string>;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -51,6 +52,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const getUserName = async (userId: string) => {
+    const res = await DomoApi.GetUser(userId);
+    return res?.displayName || "";
+  };
+
   const value = useMemo(() => {
     return {
       currentUser,
@@ -59,8 +65,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       customer,
       host,
       loading,
+      getUserName,
     };
-  }, [currentUser, currentUserId, avatarKey, customer, host, loading])
+  }, [currentUser, currentUserId, avatarKey, customer, host, loading, getUserName])
 
   return (
     <UserContext.Provider

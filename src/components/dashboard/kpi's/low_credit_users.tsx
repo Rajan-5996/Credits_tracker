@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { useContext, useEffect, useState } from "react";
 import { TbChevronRight } from "react-icons/tb";
 
-const TopCreditUsage = () => {
+const LowCreditUsage = () => {
     const [options, setOptions] = useState<ApexOptions | null>(null)
     const app = useContext(AppContext);
     const user = useContext(UserContext);
@@ -14,12 +14,12 @@ const TopCreditUsage = () => {
     useEffect(() => {
         let isMounted = true;
 
-        const loadTopUsers = async () => {
+        const loadLowCreditUsers = async () => {
             if (!app) {
                 return;
             }
 
-            const data = await app.topCreditUsers();
+            const data = await app.lowCreditUsers();
             const categories = await Promise.all(data.map((item) => user?.getUserName(item.User_ID) ?? Promise.resolve("")));
             const seriesData = data.map((item) => item.total_credits);
 
@@ -29,19 +29,44 @@ const TopCreditUsage = () => {
 
             setOptions({
                 chart: {
-                    type: "bar",
+                    type: "area",
                     toolbar: { show: false },
+                    zoom: { enabled: false },
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.45,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100],
+                    },
+                },
+                markers: {
+                    size: 4,
+                    strokeWidth: 0,
+                    hover: {
+                        size: 6,
+                    },
+                },
+                grid: {
+                    strokeDashArray: 4,
+                    borderColor: "#fcd34d33",
+                },
+                stroke: {
+                    curve: 'smooth',
                 },
                 xaxis: {
                     categories,
                     labels: {
                         show: false,
+                        rotate: -45,
                     },
                     axisBorder: {
-                        show: false,
+                        show: true,
                     },
                     axisTicks: {
-                        show: false,
+                        show: true,
                     },
                 },
                 yaxis: {
@@ -54,6 +79,9 @@ const TopCreditUsage = () => {
                 },
                 tooltip: {
                     enabled: true,
+                    y: {
+                        formatter: (value) => `${value} credits`,
+                    },
                 },
                 colors: ["#d97706"],
                 series: [
@@ -65,7 +93,7 @@ const TopCreditUsage = () => {
             });
         };
 
-        void loadTopUsers();
+        void loadLowCreditUsers();
 
         return () => {
             isMounted = false;
@@ -82,10 +110,11 @@ const TopCreditUsage = () => {
 
             <div>
                 {options && <ChartInitializer options={options} />}
+
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                        <div className="bg-amber-500 h-3 w-3 rounded-full" />
-                        <h2>Top Credit Users</h2>
+                        <div className="bg-red-500 h-3 w-3 rounded-full" />
+                        <h2>Low Credit Users</h2>
                     </div>
 
                     <div className="group flex items-center gap-2 cursor-pointer transition-all duration-200">
@@ -100,4 +129,4 @@ const TopCreditUsage = () => {
     )
 }
 
-export default TopCreditUsage
+export default LowCreditUsage

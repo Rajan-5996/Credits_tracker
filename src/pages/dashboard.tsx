@@ -1,6 +1,6 @@
 // import EntityCard from "@/components/dashboard/entity_card"
 
-import { DomainCredits, TopCreditUsage } from "@/components"
+import { DomainCredits, LowCreditUsage, TopCreditUsage } from "@/components"
 
 const DashboardPage = () => {
     return (
@@ -12,6 +12,7 @@ const DashboardPage = () => {
                 <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
                     <DomainCredits name="GWC Data.ai" url="https://gwcteq-partner.domo.com/" />
                     <TopCreditUsage />
+                    <LowCreditUsage />
                 </div>
             </section>
 

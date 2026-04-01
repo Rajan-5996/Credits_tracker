@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from "react";
 import { TbChevronRight } from "react-icons/tb";
 
 const LowCreditUsage = () => {
-    const [options, setOptions] = useState<ApexOptions | null>(null)
+    const [options, setOptions] = useState<ApexOptions | undefined>()
     const app = useContext(AppContext);
     const user = useContext(UserContext);
 
@@ -98,7 +98,7 @@ const LowCreditUsage = () => {
         return () => {
             isMounted = false;
         };
-    }, [app]);
+    }, [app, user]);
 
     return (
         <motion.div
@@ -109,7 +109,7 @@ const LowCreditUsage = () => {
             <div className="absolute inset-0 bg-linear-to-br from-amber-500/5 via-transparent to-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
             <div>
-                {options && <ChartInitializer options={options} />}
+                <ChartInitializer options={options} loading={app?.dataLoading || false} />
 
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">

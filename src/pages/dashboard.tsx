@@ -1,4 +1,4 @@
-// import EntityCard from "@/components/dashboard/entity_card"
+import EntityCard from "@/components/dashboard/entity_card"
 
 import { DomainCredits, LowCreditUsage, TopCreditUsage } from "@/components"
 
@@ -16,9 +16,11 @@ const DashboardPage = () => {
                 </div>
             </section>
 
-            {/* <div className="absolute top-4 right-4 w-2xl h-128 shadow-lg rounded-xl overflow-hidden border border-amber-200 bg-white">
-                <EntityCard />
-            </div> */}
+            <section className="relative z-10 mx-auto mt-6 w-full max-w-7xl">
+                <div className="h-160 w-full overflow-hidden rounded-3xl border border-amber-200/70 bg-white/70 shadow-xl backdrop-blur-sm">
+                    <EntityCard />
+                </div>
+            </section>
 
         </main>
     )

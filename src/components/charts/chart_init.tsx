@@ -1,7 +1,7 @@
 import ApexCharts, { type ApexOptions } from "apexcharts";
 import { useEffect, useRef } from "react";
 
-const ChartInitializer = ({ options }: { options: ApexOptions }) => {
+const ChartInitializer = ({ options, loading }: { options?: ApexOptions; loading: boolean }) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<ApexCharts | null>(null);
 
@@ -22,14 +22,22 @@ const ChartInitializer = ({ options }: { options: ApexOptions }) => {
     return () => {
       if (instanceRef.current) {
         instanceRef.current.destroy();
-        instanceRef.current = null;
+        instanceRef.current = null as any;
       }
     };
   }, [options]);
 
   return (
-    <div ref={chartRef}></div>
-  )
+    <div>
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-gray-400">Loading...</div>
+        </div>
+      ) : (
+        <div ref={chartRef} className="min-h-64"></div>
+      )}
+    </div>
+  );
 }
 
 export default ChartInitializer

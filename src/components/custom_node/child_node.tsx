@@ -7,10 +7,25 @@ const ChildNode = ({ data }: { data: any }) => {
     return (
         <div
             className="border border-gray-300 px-6 py-1 rounded-lg"
+            style={{
+                background: "#ffffff",
+                position: "relative",
+                zIndex: 2,
+                boxShadow: "0 6px 18px rgba(0, 0, 0, 0.08)",
+                overflow: "hidden",
+            }}
         >
             <Handle
                 type="target"
                 position={Position.Left}
+                style={{
+                    background: "#b8860b",
+                    width: 12,
+                    height: 12,
+                    border: "2px solid #fff",
+                    left: -6,
+                    zIndex: 3,
+                }}
             />
 
             <div
@@ -48,7 +63,7 @@ const ChildNode = ({ data }: { data: any }) => {
                     letterSpacing: "0.5px",
                 }}
             >
-                Credits: {Number.parseInt(data.credits) || "$450"}
+                Credits: {Number(data.credits).toFixed(0).toLocaleString()}
             </span>
         </div>
     );

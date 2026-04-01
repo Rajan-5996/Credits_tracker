@@ -18,18 +18,24 @@ export type DomoResponse = {
 
 const InitialNodeData: Node<NodeData>[] = [
     {
+        style: { zIndex: 2 },
         id: 'n1',
         type: 'creditNode',
-        position: { x: -40, y: 179 },
+        position: { x: -120, y: 250 },
         data: {
             label: "Instance",
             description: "https://gwcteq-partner.domo.com/",
             credits: "$320",
         },
         sourcePosition: Position.Right,
-        targetPosition: Position.Left
+        targetPosition: Position.Left,
     },
 ];
+
+const MID_COL_X = 280;
+const LEAF_COL_X = 560;
+const GAP_Y = 100;
+const MID_COUNT = 5;
 
 export const useDashboard = () => {
     const [nodes, setNodes] = useState<Node<NodeData>[]>(InitialNodeData);
@@ -39,16 +45,12 @@ export const useDashboard = () => {
     const onNodesChange = useCallback(
         (changes: NodeChange<Node<NodeData>>[]) => {
             setNodes((nodesSnapshot) => applyNodeChanges(changes, nodesSnapshot));
-            console.log(changes);
         },
         []
     );
 
     useEffect(() => {
-        if (hasLoaded.current) {
-            return;
-        }
-
+        if (hasLoaded.current) return;
         hasLoaded.current = true;
 
         const fetchEntityData = async () => {
@@ -59,30 +61,32 @@ export const useDashboard = () => {
                     { contentType: 'text/plain' }
                 ) as DomoResponse;
 
-                const rootY = 0;
 
-                const childX = 300;
-                const gapY = 110;
+                const midRows = res.rows.slice(0, MID_COUNT);
+                const leafRows = res.rows.slice(MID_COUNT);
+
+                const midTotalHeight = (midRows.length - 1) * GAP_Y;
+                const leafTotalHeight = (leafRows.length - 1) * GAP_Y;
+
+                const midStartY = 250 - midTotalHeight / 2;
+                const leafStartY = 250 - leafTotalHeight / 2;
 
                 const newNodes: Node<NodeData>[] = [];
                 const newEdges: Edge[] = [];
 
-                res.rows.slice(0, 6).forEach((row, index) => {
+                midRows.forEach((row, i) => {
                     const [entityType, credits] = row;
-
-                    const nodeId = `entity-${index}`;
+                    const nodeId = `mid-${i}`;
 
                     newNodes.push({
                         id: nodeId,
                         type: 'childNode',
                         position: {
-                            x: childX,
-                            y: rootY + index * gapY,
+                            x: MID_COL_X,
+                            y: midStartY + i * GAP_Y,
                         },
-                        data: {
-                            label: entityType,
-                            credits: credits,
-                        },
+                        style: { zIndex: 2 },
+                        data: { label: entityType, credits },
                         targetPosition: Position.Left,
                         sourcePosition: Position.Right,
                     });
@@ -90,9 +94,39 @@ export const useDashboard = () => {
                     newEdges.push({
                         id: `e-n1-${nodeId}`,
                         source: 'n1',
-                        animated: true,
                         target: nodeId,
-                        markerEnd: MarkerType.Arrow,
+                        animated: true,
+                        zIndex: 0,
+                        markerEnd: { type: MarkerType.Arrow },
+                        style: { stroke: '#185FA5', strokeWidth: 1.5 },
+                    });
+                });
+
+                leafRows.forEach((row, i) => {
+                    const [entityType, credits] = row;
+                    const nodeId = `leaf-${i}`;
+
+                    newNodes.push({
+                        id: nodeId,
+                        type: 'childNode',
+                        position: {
+                            x: LEAF_COL_X,
+                            y: leafStartY + i * GAP_Y,
+                        },
+                        style: { zIndex: 2 },
+                        data: { label: entityType, credits },
+                        targetPosition: Position.Left,
+                        sourcePosition: Position.Right,
+                    });
+
+                    newEdges.push({
+                        id: `e-n1-${nodeId}`,
+                        source: 'n1',
+                        target: nodeId,
+                        animated: true,
+                        zIndex: 0,
+                        markerEnd: { type: MarkerType.Arrow },
+                        style: { stroke: '#7F77DD', strokeWidth: 1.2 },
                     });
                 });
 
@@ -100,16 +134,12 @@ export const useDashboard = () => {
                 setEdges(newEdges);
 
             } catch (error) {
-                console.log(error);
+                console.error('fetchEntityData error:', error);
             }
         };
 
         fetchEntityData();
     }, []);
 
-    return {
-        nodes,
-        edges,
-        onNodesChange,
-    };
-}
+    return { nodes, edges, onNodesChange };
+};

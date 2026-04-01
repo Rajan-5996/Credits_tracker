@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // @ts-ignore
-import { createContext, useState, useEffect, ReactNode } from "react";
-import DomoApi from "./domoAPI";
+import { createContext, useState, useEffect, ReactNode, useMemo } from "react";
+import DomoApi from "../API/domoAPI";
 
 export interface UserContextType {
   currentUser: string;
@@ -9,6 +9,7 @@ export interface UserContextType {
   avatarKey: string;
   customer: string;
   host: string;
+  loading: boolean;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(
@@ -21,13 +22,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [avatarKey, setAvatarKey] = useState<string>("");
   const [customer, setCustomer] = useState<string>("");
   const [host, setHost] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let isUserFetched = false;
 
     DomoApi.GetCurrentUser().then((data: any) => {
-      // console.log("User Data",data);
-
       if (!isUserFetched) {
         const userId = data?.userId;
         const displayName = data?.displayName;
@@ -42,6 +42,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setHost(host || "");
 
         isUserFetched = true;
+        setLoading(false);
       }
     });
 
@@ -50,15 +51,20 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const value = useMemo(() => {
+    return {
+      currentUser,
+      currentUserId,
+      avatarKey,
+      customer,
+      host,
+      loading,
+    };
+  }, [currentUser, currentUserId, avatarKey, customer, host, loading])
+
   return (
     <UserContext.Provider
-      value={{
-        currentUser,
-        currentUserId,
-        avatarKey,
-        customer,
-        host,
-      }}
+      value={value}
     >
       {children}
     </UserContext.Provider>

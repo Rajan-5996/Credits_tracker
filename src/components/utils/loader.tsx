@@ -6,14 +6,14 @@ const keyframes = `
 `;
 
 const shimmer = {
-    background: "linear-gradient(90deg, #e8e8e8 25%, #f5f5f5 50%, #e8e8e8 75%)",
+    background: "linear-gradient(90deg, rgba(112,48,177,0.05) 25%, rgba(112,48,177,0.1) 50%, rgba(112,48,177,0.05) 75%)",
     backgroundSize: "200% 100%",
-    animation: "shimmer 1.6s infinite",
+    animation: "shimmer 2s infinite linear",
 };
 
 const box = (extra = {}) => ({
     ...shimmer,
-    borderRadius: 8,
+    borderRadius: 12,
     ...extra,
 });
 
@@ -31,12 +31,11 @@ export default function SkeletonLoader() {
             <style>{keyframes}</style>
             <div
                 style={{
-                    border: "1px solid #e4e4e4",
-                    overflow: "hidden",
-                    background: "#fff",
+                    background: "#fdfbff",
                     minHeight: "100vh",
                     display: "flex",
                     flexDirection: "column",
+                    fontFamily: "'Poppins', sans-serif",
                 }}
             >
                 <div
@@ -44,40 +43,47 @@ export default function SkeletonLoader() {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        padding: "10px 16px",
-                        borderBottom: "1px solid #e4e4e4",
+                        padding: "12px 16px",
+                        borderBottom: "1px solid rgba(112,48,177,0.1)",
+                        background: "white",
+                        maxWidth: "1580px",
+                        margin: "0 auto",
+                        width: "100%",
                     }}
                 >
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={box({ width: 36, height: 36, borderRadius: 8 })} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={box({ width: 35, height: 35, borderRadius: 8 })} />
                         <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                            <div style={box({ width: 120, height: 12 })} />
-                            <div style={box({ width: 180, height: 10 })} />
+                            <div style={box({ width: 140, height: 14 })} />
+                            <div style={box({ width: 200, height: 10 })} />
                         </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        <div style={box({ width: 28, height: 28, borderRadius: 6 })} />
-                        <div style={circle(32)} />
-                        <div style={box({ width: 90, height: 12 })} />
+                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        <div style={box({ width: 36, height: 36, borderRadius: 10 })} />
+                        <div style={circle(40)} />
                     </div>
                 </div>
 
                 <div
                     style={{
-                        padding: 16,
+                        padding: "16px 8px",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 12,
+                        gap: 16,
+                        maxWidth: "1580px",
+                        margin: "0 auto",
+                        width: "100%",
                     }}
                 >
-                    <div style={{ display: "flex", gap: 12 }}>
-                        <div style={box({ flex: 1, height: 200 })} />
-                        <div style={box({ flex: 1, height: 200 })} />
-                        <div style={box({ flex: 1, height: 200 })} />
+                    <div style={{ display: "flex", gap: 16 }}>
+                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
+                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
+                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
                     </div>
-                    <div style={box({ width: "100%", height: 200 })} />
-                    <div style={box({ width: "100%", height: 300 })} />
+                     <div style={box({ width: "100%", height: 720, borderRadius: 24, marginTop: 12 })} />
+                    <div style={box({ width: "100%", height: 64, borderRadius: 12, marginTop: 12 })} />
+                    <div style={box({ width: "100%", height: 520, borderRadius: 24, marginTop: 12 })} />
                 </div>
             </div>
         </>

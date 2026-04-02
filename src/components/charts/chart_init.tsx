@@ -1,7 +1,15 @@
 import ApexCharts, { type ApexOptions } from "apexcharts";
 import { useEffect, useRef } from "react";
 
-const ChartInitializer = ({ options, loading }: { options?: ApexOptions; loading: boolean }) => {
+const ChartInitializer = ({
+  options,
+  loading,
+  height = "100%"
+}: {
+  options?: ApexOptions;
+  loading: boolean;
+  height?: string | number;
+}) => {
   const chartRef = useRef<HTMLDivElement | null>(null);
   const instanceRef = useRef<ApexCharts | null>(null);
 
@@ -15,7 +23,16 @@ const ChartInitializer = ({ options, loading }: { options?: ApexOptions; loading
       instanceRef.current.destroy();
     }
 
-    const chart = new ApexCharts(chartRef.current, options);
+    // Ensure height is set in options
+    const updatedOptions = {
+      ...options,
+      chart: {
+        ...options.chart,
+        height: height
+      }
+    };
+
+    const chart = new ApexCharts(chartRef.current, updatedOptions);
     instanceRef.current = chart;
     chart.render();
 
@@ -25,19 +42,18 @@ const ChartInitializer = ({ options, loading }: { options?: ApexOptions; loading
         instanceRef.current = null as any;
       }
     };
-  }, [options]);
+  }, [options, height]);
 
-  return (
-    <div>
-      {loading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="text-gray-400">Loading...</div>
-        </div>
-      ) : (
-        <div ref={chartRef} className="min-h-64"></div>
-      )}
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center" style={{ height }}>
+        <div className="text-primary/40 animate-pulse text-xs font-semibold">Loading data...</div>
+      </div>
+    );
+  }
+
+  return <div ref={chartRef} style={{ minHeight: height }}></div>;
 }
 
 export default ChartInitializer
+

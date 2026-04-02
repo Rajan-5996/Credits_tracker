@@ -1,5 +1,4 @@
 import { TbArrowsMaximize, TbArrowsMinimize } from "react-icons/tb";
-import { GiReceiveMoney } from "react-icons/gi";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/context/currentUserContext";
 
@@ -32,36 +31,50 @@ const NavBar = () => {
     };
 
     return (
-        <header className="sticky top-0 z-30 w-full border-b border-amber-100 bg-linear-to-r from-white via-amber-50/70 to-orange-50/70 backdrop-blur">
-            <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                <div className="flex min-w-0 items-center gap-3">
-                    <div className="grid h-9 w-9 place-items-center rounded bg-amber-100 text-amber-700 ring-1 ring-amber-200">
-                        <GiReceiveMoney size={20} />
-                    </div>
-
-                    <div className="min-w-0">
-                        <h1 className="truncate text-base font-semibold tracking-tight text-slate-900 sm:text-lg">Credits Tracker</h1>
-                        <p className="hidden text-xs text-slate-500 sm:block">Monitor usage, and domain burn rate</p>
+        <header className="sticky top-0 z-[100] w-full border-b border-white/20 bg-white/70 backdrop-blur-xl shadow-sm">
+            <nav className="mx-auto flex h-18 w-full max-w-[1580px] items-center justify-between px-1 sm:px-2">
+                <div className="flex min-w-0 items-center gap-4">
+                    <img
+                        src="Logo.svg"
+                        alt="GWC Data.ai Logo"
+                        className="h object-contain"
+                        height={35}
+                        width={35}
+                    />
+                    <div className="min-w-0 flex flex-col">
+                        <h1 className="truncate text-lg font-black tracking-tighter text-foreground sm:text-xl uppercase leading-none">
+                            GWC <span className="text-primary font-black">Data.ai</span>
+                        </h1>
+                        <a
+                            href="https://gwcteq-partner.domo.com/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="hidden text-[9px] font-bold text-primary/60 hover:text-primary sm:block tracking-wide truncate transition-colors decoration-primary underline-offset-2"
+                        >
+                            gwcteq-partner.domo.com
+                        </a>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-3 sm:gap-4">
                     <button
                         type="button"
                         onClick={toggleFullscreen}
                         aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                        title={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                        className="grid h-9 w-9 cursor-pointer place-items-center rounded border border-amber-100 bg-white text-slate-600 shadow-sm transition hover:bg-amber-50 hover:text-slate-900"
+                        className="grid h-10 w-10 cursor-pointer place-items-center rounded-xl border border-border bg-white text-muted-foreground shadow-sm transition-all hover:bg-secondary hover:text-primary active:scale-90"
                     >
-                        {isFullscreen ? <TbArrowsMinimize size={18} /> : <TbArrowsMaximize size={18} />}
+                        {isFullscreen ? <TbArrowsMinimize size={20} /> : <TbArrowsMaximize size={20} />}
                     </button>
 
                     <button
                         type="button"
-                        className="hidden items-center gap-2 rounded border border-amber-100 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-amber-50 sm:flex"
+                        className="hidden items-center gap-3 rounded-2xl border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-secondary hover:border-primary/20 sm:flex group"
                     >
-                        <img src={userContext?.avatarKey} alt={displayName} className="h-6 w-6 rounded" />
-                        <span>{displayName}</span>
+                        <div className="relative">
+                            <img src={userContext?.avatarKey} alt={displayName} className="h-6.5 w-6.5 rounded-lg border border-primary/20" />
+                            <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white" />
+                        </div>
+                        <span className="group-hover:text-primary transition-colors">{displayName}</span>
                     </button>
                 </div>
             </nav>

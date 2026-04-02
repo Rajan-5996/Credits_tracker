@@ -5,6 +5,7 @@ import type { ApexOptions } from "apexcharts";
 import { motion } from "framer-motion";
 import { useContext, useEffect, useState } from "react";
 import { TbChevronRight } from "react-icons/tb";
+import { formatCompactNumber } from "@/lib/utils";
 
 const LowCreditUsage = () => {
     const [options, setOptions] = useState<ApexOptions | undefined>()
@@ -37,53 +38,45 @@ const LowCreditUsage = () => {
                     type: "gradient",
                     gradient: {
                         shadeIntensity: 1,
-                        opacityFrom: 0.45,
-                        opacityTo: 0.05,
+                        opacityFrom: 0.6,
+                        opacityTo: 0.1,
                         stops: [0, 90, 100],
+                        colorStops: [
+                            { offset: 0, color: "#7030B1", opacity: 0.6 },
+                            { offset: 100, color: "#B56DD3", opacity: 0.1 }
+                        ]
                     },
                 },
                 markers: {
-                    size: 4,
-                    strokeWidth: 0,
-                    hover: {
-                        size: 6,
-                    },
+                    size: 0,
+                    hover: { size: 5 },
                 },
                 grid: {
-                    strokeDashArray: 4,
-                    borderColor: "#fcd34d33",
+                    show: false,
                 },
                 stroke: {
                     curve: 'smooth',
+                    width: 2,
+                    colors: ["#7030B1"]
                 },
                 xaxis: {
                     categories,
-                    labels: {
-                        show: false,
-                        rotate: -45,
-                    },
-                    axisBorder: {
-                        show: true,
-                    },
-                    axisTicks: {
-                        show: true,
-                    },
+                    labels: { show: false },
+                    axisBorder: { show: false },
+                    axisTicks: { show: false },
                 },
                 yaxis: {
-                    labels: {
-                        show: false,
-                    },
+                    labels: { show: false },
                 },
-                dataLabels: {
-                    enabled: false,
-                },
+                dataLabels: { enabled: false },
                 tooltip: {
                     enabled: true,
+                    theme: 'dark',
                     y: {
-                        formatter: (value) => `${value} credits`,
+                        formatter: (val) => formatCompactNumber(val)
                     },
                 },
-                colors: ["#d97706"],
+                colors: ["#7030B1"],
                 series: [
                     {
                         name: "Credits",
@@ -102,27 +95,27 @@ const LowCreditUsage = () => {
 
     return (
         <motion.div
-            whileHover={{ y: -8, scale: 1.02 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="relative w-96 rounded-2xl overflow-hidden border border-amber-200/60 bg-linear-to-br from-white via-amber-50/30 to-white shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer p-5 flex flex-col justify-between backdrop-blur-sm"
+            whileHover={{ y: -4, scale: 1.01 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="group relative h-64 w-full min-w-80 rounded-md overflow-hidden border border-white/40 bg-white/60 shadow-lg hover:shadow-xl transition-all duration-500 cursor-pointer p-5 flex flex-col justify-between backdrop-blur-xl"
         >
-            <div className="absolute inset-0 bg-linear-to-br from-amber-500/5 via-transparent to-amber-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute inset-0 bg-brand-gradient opacity-0 group-hover:opacity-[0.02] transition-opacity duration-500" />
 
-            <div>
-                <ChartInitializer options={options} loading={app?.dataLoading || false} />
-
-                <div className="flex items-center justify-between">
+            <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                        <div className="bg-red-500 h-3 w-3 rounded-full" />
-                        <h2>Low Credit Users</h2>
+                        <div className="bg-amber-500 h-3.5 w-3.5 rounded-full" />
+                        <h2 className="text-base font-bold text-foreground tracking-tight capitalize">Low Credit Users</h2>
                     </div>
 
-                    <div className="group flex items-center gap-2 cursor-pointer transition-all duration-200">
-                        <h1 className="group-hover:underline">
-                            view All
-                        </h1>
-                        <TbChevronRight />
+                    <div className="flex items-center gap-1 text-primary opacity-60 group-hover:opacity-100 transition-opacity duration-200">
+                        <span className="text-[10px] font-bold uppercase tracking-wider">view All</span>
+                        <TbChevronRight className="text-base" />
                     </div>
+                </div>
+
+                <div className="flex-1 min-h-0 bg-primary/5 rounded-2xl overflow-hidden mt-1">
+                    <ChartInitializer options={options} loading={app?.dataLoading || false} height={160} />
                 </div>
             </div>
         </motion.div>

@@ -4,72 +4,75 @@ import {
 } from "@xyflow/react";
 import ChildNode from "./child_node";
 
+import { formatCompactNumber } from "@/lib/utils";
+
 const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
     return (
         <div
             style={{
-                background: "linear-gradient(145deg, #f9e07a, #f5c842)",
+                background: "white",
                 border: selected
-                    ? "2.5px dashed #b8860b"
-                    : "2.5px dashed #d4a800",
-                borderRadius: "18px",
-                width: 260,
+                    ? "2px solid #7030B1"
+                    : "1px solid rgba(112, 48, 177, 0.2)",
+                borderRadius: "24px",
+                width: 280,
                 boxShadow: selected
-                    ? "0 8px 32px rgba(180,140,0,0.35), 0 2px 8px rgba(0,0,0,0.1)"
-                    : "0 4px 16px rgba(180,140,0,0.18), 0 2px 6px rgba(0,0,0,0.08)",
-                fontFamily: "'Caveat', 'Comic Sans MS', cursive",
+                    ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
+                    : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
+                fontFamily: "'Poppins', sans-serif",
                 overflow: "hidden",
-                transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                backdropFilter: "blur(12px)",
             }}
         >
             <div
                 style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
-                    padding: "12px 14px 10px",
-                    borderBottom: "1.5px solid rgba(180,140,0,0.25)",
+                    gap: "12px",
+                    padding: "16px 20px",
+                    borderBottom: "1px solid rgba(112, 48, 177, 0.1)",
+                    background: "rgba(112, 48, 177, 0.02)",
                 }}
             >
                 <div
                     style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "10px",
-                        background: "rgba(255,255,255,0.55)",
-                        border: "1.5px solid rgba(180,140,0,0.3)",
+                        width: 44,
+                        height: 44,
+                        borderRadius: "14px",
+                        background: "linear-gradient(135deg, #7030B1 0%, #B56DD3 100%)",
                         flexShrink: 0,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        fontSize: "18px",
+                        boxShadow: "0 4px 12px rgba(112, 48, 177, 0.3)",
                     }}
                 >
-                    <img src="/Logo.svg" alt={data.label} height={25} width={25} />
+                    <img src="/Logo.svg" alt={data.label} height={26} width={26} style={{ filter: "brightness(0) invert(1)" }} />
                 </div>
 
                 <div style={{ minWidth: 0 }}>
                     <div
                         style={{
-                            fontSize: "20px",
+                            fontSize: "16px",
                             fontWeight: "700",
-                            color: "#3a2a00",
-                            letterSpacing: "0.5px",
+                            color: "#1e293b",
                             lineHeight: 1.2,
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
+                            letterSpacing: "-0.01em",
                         }}
                     >
                         {data.label || "Node Name"}
                     </div>
                     <div
                         style={{
-                            fontSize: "12px",
-                            color: "#7a5c00",
+                            fontSize: "11px",
+                            color: "#64748b",
                             marginTop: "2px",
-                            fontFamily: "'Caveat', cursive",
-                            fontWeight: 400,
+                            fontWeight: 500,
+                            opacity: 0.8,
                         }}
                     >
                         {data.description || "Node description"}
@@ -79,23 +82,24 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
 
             <div
                 style={{
-                    margin: "10px",
-                    background: "rgba(255,255,240,0.75)",
-                    borderRadius: "12px",
-                    padding: "14px 16px",
+                    margin: "12px",
+                    background: "rgba(112, 48, 177, 0.03)",
+                    borderRadius: "16px",
+                    padding: "14px",
                     textAlign: "center",
-                    border: "1px solid rgba(180,140,0,0.15)",
+                    border: "1px solid rgba(112, 48, 177, 0.05)",
                 }}
             >
+                <div style={{ fontSize: "10px", color: "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "4px" }}>Available Credits</div>
                 <span
                     style={{
-                        fontSize: "22px",
-                        fontWeight: "700",
-                        color: "#3a2a00",
-                        letterSpacing: "0.5px",
+                        fontSize: "24px",
+                        fontWeight: "900",
+                        color: "#7030B1",
+                        letterSpacing: "-0.02em",
                     }}
                 >
-                    Credits: {data.credits || "$450"}
+                    {formatCompactNumber(data.credits || 0)}
                 </span>
             </div>
 
@@ -103,16 +107,17 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
                 type="source"
                 position={Position.Right}
                 style={{
-                    background: "#b8860b",
-                    width: 12,
-                    height: 12,
+                    background: "#7030B1",
+                    width: 10,
+                    height: 10,
                     border: "2px solid #fff",
-                    right: -6,
+                    right: -5,
                 }}
             />
         </div>
     );
 };
+
 
 export default CreditNode;
 

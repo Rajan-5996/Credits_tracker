@@ -84,8 +84,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             const data = res?.rows?.map((row) => ({
                 User_ID: String(row?.[0] ?? ""),
                 Name: String(row?.[1] ?? ""),
-                Status: String(row?.[2] ?? ""),
-                credits: Number(row?.[3] ?? 0),
+                Status: String(row?.[3] ?? ""),
+                credits: Number(row?.[4] ?? 0),
             })) ?? [];
 
             return data;

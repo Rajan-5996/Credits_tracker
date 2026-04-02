@@ -9,6 +9,20 @@
   "collections": [],
   "workflowMapping": [],
   "packagesMapping": [],
+  "datasetsMapping": [
+    {
+      "dataSetId": "83cee105-1028-41fc-903f-49834b44431f",
+      "alias": "credits_tracker",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "7cfbea27-1392-43da-8dfd-49d1b575c33b",
+      "alias": "credits_tracker_table",
+      "fields": [],
+      "dql": null
+    }
+  ],
   "id": "a20bdf21-5f1c-4c7a-8c73-cdab396a1ecc",
   "proxyId": "871dd6fa-fd5a-42a2-8ae4-aecf53d6101e"
 }

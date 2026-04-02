@@ -9,6 +9,7 @@ export interface AppContextType {
     topCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
     lowCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
     dataLoading: boolean;
+    userTableData: () => Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>>;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(
@@ -66,14 +67,43 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         }));
     }
 
+    const userTableData = async (): Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>> => {
+        try {
+            const res = await domo.post(
+                '/sql/v1/credits_tracker_table',
+                `
+                    SELECT * FROM dataAlias
+                `,
+                { contentType: 'text/plain' }
+            ) as DomoResponse;
+
+            if (res) {
+                loading && setLoading(false);
+            }
+
+            const data = res?.rows?.map((row) => ({
+                User_ID: String(row?.[0] ?? ""),
+                Name: String(row?.[1] ?? ""),
+                Status: String(row?.[2] ?? ""),
+                credits: Number(row?.[3] ?? 0),
+            })) ?? [];
+
+            return data;
+        } catch (error) {
+            console.error('userTableData error:', error);
+            return [];
+        }
+    };
+
     const value = useMemo(() => {
         return {
             domainCredits,
             topCreditUsers,
             lowCreditUsers,
-            dataLoading: loading
+            dataLoading: loading,
+            userTableData,
         };
-    }, [domainCredits, topCreditUsers, lowCreditUsers, loading]);
+    }, [domainCredits, topCreditUsers, lowCreditUsers, loading, userTableData]);
 
     return (
         <AppContext.Provider

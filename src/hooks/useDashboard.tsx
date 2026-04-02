@@ -1,5 +1,6 @@
+import { AppContext } from "@/context/appContext";
 import { applyNodeChanges, MarkerType, Position, type Edge, type Node, type NodeChange } from "@xyflow/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import domo from "ryuu.js";
 
 interface NodeData extends Record<string, unknown> {
@@ -16,31 +17,62 @@ export type DomoResponse = {
     columns: string[];
 };
 
-const InitialNodeData: Node<NodeData>[] = [
-    {
-        style: { zIndex: 2 },
-        id: 'n1',
-        type: 'creditNode',
-        position: { x: -120, y: 250 },
-        data: {
-            label: "Instance",
-            description: "https://gwcteq-partner.domo.com/",
-            credits: "$320",
-        },
-        sourcePosition: Position.Right,
-        targetPosition: Position.Left,
-    },
-];
-
 const MID_COL_X = 280;
 const LEAF_COL_X = 560;
 const GAP_Y = 100;
 const MID_COUNT = 5;
 
 export const useDashboard = () => {
-    const [nodes, setNodes] = useState<Node<NodeData>[]>(InitialNodeData);
+    const app = useContext(AppContext);
     const [edges, setEdges] = useState<Edge[]>([]);
     const hasLoaded = useRef(false);
+
+    const [credits, setCredits] = useState<string>("0");
+
+    const getInitialNodeData = (): Node<NodeData>[] => [
+        {
+            style: { zIndex: 2 },
+            id: 'n1',
+            type: 'creditNode',
+            position: { x: -120, y: 250 },
+            data: {
+                label: "Instance",
+                description: "https://gwcteq-partner.domo.com/",
+                credits: credits,
+            },
+            sourcePosition: Position.Right,
+            targetPosition: Position.Left,
+        },
+    ];
+
+    const [nodes, setNodes] = useState<Node<NodeData>[]>(getInitialNodeData());
+
+    useEffect(() => {
+        const fetchCredits = async () => {
+            const res = await app?.domainCredits();
+            if (res) {
+                const creditValue = res;
+                setCredits(Number(creditValue).toFixed(0).toLocaleString());
+            }
+        };
+        fetchCredits();
+    }, [app]);
+
+    useEffect(() => {
+        setNodes((prevNodes) =>
+            prevNodes.map((node) =>
+                node.id === 'n1'
+                    ? {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            credits,
+                        },
+                    }
+                    : node
+            )
+        );
+    }, [credits]);
 
     const onNodesChange = useCallback(
         (changes: NodeChange<Node<NodeData>>[]) => {
@@ -130,7 +162,7 @@ export const useDashboard = () => {
                     });
                 });
 
-                setNodes([...InitialNodeData, ...newNodes]);
+                setNodes([...getInitialNodeData(), ...newNodes]);
                 setEdges(newEdges);
 
             } catch (error) {

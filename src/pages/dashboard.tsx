@@ -7,39 +7,40 @@ const DashboardPage = () => {
     const [statusValue, setStatusValue] = useState("all")
 
     return (
-        <main className="relative min-h-screen overflow-hidden bg-linear-to-br from-[#fff7e8] via-[#fffdf6] to-[#ffeedd] px-4 py-8 sm:px-6 lg:px-10">
-            <div className="pointer-events-none absolute -left-24 top-10 h-64 w-64 rounded-full bg-amber-300/20 blur-3xl" />
-            <div className="pointer-events-none absolute right-0 top-36 h-72 w-72 rounded-full bg-orange-300/20 blur-3xl" />
-
-            <section className="relative z-10 mx-auto w-full max-w-7xl">
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-                    <DomainCredits name="GWC Data.ai" url="https://gwcteq-partner.domo.com/" />
+        <main className="relative min-h-screen overflow-hidden bg-background px-1 py-4 sm:px-2">
+            <div className="pointer-events-none absolute -left-24 top-10 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
+            <div className="pointer-events-none absolute right-0 top-36 h-96 w-96 rounded-full bg-accent/10 blur-[120px]" />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/20 blur-[120px]" />
+            <section className="relative z-10 mx-auto w-full max-w-[1580px]">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 px-1">
+                    <DomainCredits />
                     <TopCreditUsage />
                     <LowCreditUsage />
                 </div>
             </section>
 
-            <section className="relative z-10 mx-auto mt-6 w-full max-w-7xl">
-                <div className="h-160 w-full overflow-hidden rounded-3xl border border-amber-200/70 bg-white/70 shadow-xl backdrop-blur-sm">
+            <section className="relative z-10 mx-auto mt-4 w-full max-w-[1580px] px-1">
+                <div className="h-[720px] w-full overflow-hidden rounded-[1.5rem] border border-white/40 bg-white/60 shadow-xl backdrop-blur-xl">
                     <EntityCard />
                 </div>
             </section>
 
-            <section className="relative z-40 mx-auto mt-6 ">
-                <Filter
-                    searchValue={searchValue}
-                    onSearchChange={setSearchValue}
-                    statusValue={statusValue}
-                    onStatusChange={setStatusValue}
-                />
-            </section>
-
-            <section className="relative z-10 mx-auto mt-6 w-full max-w-7xl">
-                <div className="h-160 w-full overflow-y-auto rounded-3xl border border-amber-200/70 bg-white/70 p-4 shadow-xl backdrop-blur-sm">
-                    <UsersDataTable searchValue={searchValue} statusValue={statusValue} />
+            <section className="relative z-40 mx-auto mt-4 max-w-[1580px] px-1">
+                <div className="rounded-xl border border-white/20 bg-white/30 p-0.5 shadow-sm backdrop-blur-md hover:bg-white/40 hover:border-white/40 transition-all duration-300">
+                    <Filter
+                        searchValue={searchValue}
+                        onSearchChange={setSearchValue}
+                        statusValue={statusValue}
+                        onStatusChange={setStatusValue}
+                    />
                 </div>
             </section>
 
+            <section className="relative z-10 mx-auto mt-4 w-full max-w-[1580px] pb-8 px-1">
+                <div className="h-[520px] w-full rounded-md border border-white/40 bg-white/60 shadow-xl backdrop-blur-xl overflow-hidden">
+                    <UsersDataTable searchValue={searchValue} statusValue={statusValue} />
+                </div>
+            </section>
         </main>
     )
 }

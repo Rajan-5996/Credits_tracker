@@ -18,22 +18,43 @@ const headers = [
     "Action"
 ]
 
-function UsersDataTable() {
+type UsersDataTableProps = Readonly<{
+    searchValue: string
+    statusValue: string
+}>
+
+function UsersDataTable({ searchValue, statusValue }: UsersDataTableProps) {
     const app = useContext(AppContext)
     const [users, setUsers] = useState<Array<{ User_ID: string, Name: string, Status: string, credits: number }>>([])
     const [currentPage, setCurrentPage] = useState(1)
 
     const pageSize = 10
 
+    const filteredUsers = useMemo(() => {
+        const normalizedSearch = searchValue.trim().toLowerCase()
+        const normalizedStatus = statusValue.trim().toLowerCase()
+
+        return users.filter((user) => {
+            const matchesSearch = !normalizedSearch ||
+                user.User_ID.toLowerCase().includes(normalizedSearch) ||
+                user.Name.toLowerCase().includes(normalizedSearch)
+
+            const matchesStatus = normalizedStatus === "all" ||
+                user.Status.toLowerCase() === normalizedStatus
+
+            return matchesSearch && matchesStatus
+        })
+    }, [searchValue, statusValue, users])
+
     const totalPages = useMemo(() => {
-        return Math.max(1, Math.ceil(users.length / pageSize))
-    }, [users.length])
+        return Math.max(1, Math.ceil(filteredUsers.length / pageSize))
+    }, [filteredUsers.length])
 
     const paginatedUsers = useMemo(() => {
         const start = (currentPage - 1) * pageSize
         const end = start + pageSize
-        return users.slice(start, end)
-    }, [users, currentPage])
+        return filteredUsers.slice(start, end)
+    }, [filteredUsers, currentPage])
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -47,6 +68,16 @@ function UsersDataTable() {
         }
         fetchUsers()
     }, [app])
+
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [searchValue, statusValue])
+
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            setCurrentPage(totalPages)
+        }
+    }, [currentPage, totalPages])
 
     const handlePrevious = () => {
         setCurrentPage((prev) => Math.max(1, prev - 1))
@@ -93,7 +124,7 @@ function UsersDataTable() {
 
             <div className="mt-auto flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-background/90 px-3 py-2">
                 <p className="text-sm text-muted-foreground">
-                    Total users: {users.length}
+                    Showing {filteredUsers.length} of {users.length} users
                 </p>
                 <div className="flex items-center gap-2">
                     <span className="text-sm text-muted-foreground">

@@ -1,7 +1,11 @@
+import { useState } from "react"
 import EntityCard from "@/components/dashboard/entity_card"
-import { DomainCredits, LowCreditUsage, TopCreditUsage, UsersDataTable } from "@/components"
+import { DomainCredits, Filter, LowCreditUsage, TopCreditUsage, UsersDataTable } from "@/components"
 
 const DashboardPage = () => {
+    const [searchValue, setSearchValue] = useState("")
+    const [statusValue, setStatusValue] = useState("all")
+
     return (
         <main className="relative min-h-screen overflow-hidden bg-linear-to-br from-[#fff7e8] via-[#fffdf6] to-[#ffeedd] px-4 py-8 sm:px-6 lg:px-10">
             <div className="pointer-events-none absolute -left-24 top-10 h-64 w-64 rounded-full bg-amber-300/20 blur-3xl" />
@@ -21,9 +25,18 @@ const DashboardPage = () => {
                 </div>
             </section>
 
+            <section className="relative z-40 mx-auto mt-6 ">
+                <Filter
+                    searchValue={searchValue}
+                    onSearchChange={setSearchValue}
+                    statusValue={statusValue}
+                    onStatusChange={setStatusValue}
+                />
+            </section>
+
             <section className="relative z-10 mx-auto mt-6 w-full max-w-7xl">
                 <div className="h-160 w-full overflow-y-auto rounded-3xl border border-amber-200/70 bg-white/70 p-4 shadow-xl backdrop-blur-sm">
-                    <UsersDataTable />
+                    <UsersDataTable searchValue={searchValue} statusValue={statusValue} />
                 </div>
             </section>
 

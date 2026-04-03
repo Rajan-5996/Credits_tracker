@@ -2,9 +2,9 @@ import {
     Handle,
     Position,
 } from "@xyflow/react";
-import ChildNode from "./child_node";
 
 import { formatCompactNumber } from "@/lib/utils";
+import ChildNode from "./child_node";
 
 const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
     return (

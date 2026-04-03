@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // @ts-ignore
 import type { DomoResponse } from "@/hooks/useDashboard";
-import { createContext, type ReactNode, useMemo, useState } from "react";
+import { createContext, type ReactNode, useCallback, useMemo, useState } from "react";
 import domo from "ryuu.js";
 
 export interface AppContextType {
@@ -9,7 +9,10 @@ export interface AppContextType {
     topCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
     lowCreditUsers: () => Promise<Array<{ User_ID: string, total_credits: number }>>;
     dataLoading: boolean;
+    loader2: boolean;
     userTableData: () => Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>>;
+    getUserCredits: (userId: string) => Promise<number | { totalCredits: number; name: string }>;
+    resetLoader2: () => void;
 }
 
 export const AppContext = createContext<AppContextType | undefined>(
@@ -18,8 +21,9 @@ export const AppContext = createContext<AppContextType | undefined>(
 
 export const AppProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true);
+    const [loader2, setLoader2] = useState(true);
 
-    const domainCredits = async (): Promise<string> => {
+    const domainCredits = useCallback(async (): Promise<string> => {
         const res = await domo.post(
             '/sql/v1/credits_tracker',
             'SELECT domain, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY domain',
@@ -31,9 +35,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         }
 
         return String(res?.rows?.[0]?.[1] ?? 0);
-    }
+    }, [loading]);
 
-    const topCreditUsers = async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
+    const topCreditUsers = useCallback(async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
         const res = await domo.post('/sql/v1/credits_tracker',
             'SELECT User_ID, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY User_ID ORDER BY total_credits DESC LIMIT 5', {
             contentType: 'text/plain'
@@ -48,9 +52,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             User_ID: String(row?.[0] ?? ""),
             total_credits: Number(row?.[1] ?? 0),
         }));
-    }
+    }, [loading])
 
-    const lowCreditUsers = async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
+    const lowCreditUsers = useCallback(async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
         const res = await domo.post('/sql/v1/credits_tracker',
             'SELECT User_ID, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY User_ID ORDER BY total_credits ASC LIMIT 5', {
             contentType: 'text/plain'
@@ -65,9 +69,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             User_ID: String(row?.[0] ?? ""),
             total_credits: Number(row?.[1] ?? 0),
         }));
-    }
+    }, [loading])
 
-    const userTableData = async (): Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>> => {
+    const userTableData = useCallback(async (): Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>> => {
         try {
             const res = await domo.post(
                 '/sql/v1/credits_tracker_table',
@@ -93,7 +97,44 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             console.error('userTableData error:', error);
             return [];
         }
-    };
+    }, [loading]);
+
+    const getUserCredits = useCallback(async (userId: string): Promise<number | { totalCredits: number, name: string }> => {
+        try {
+            const res = await domo.post(
+                '/sql/v1/credits_tracker_table',
+                `
+                    SELECT Name, total_credits_used
+                    FROM dataAlias
+                    WHERE User_ID = '${userId}'
+                `,
+                { contentType: 'text/plain' }
+            ) as DomoResponse;
+
+            if (res) {
+                loading && setLoading(false);
+            }
+
+            const totalCredits = Number(res?.rows?.[0]?.[1] ?? 0);
+            const name = String(res?.rows?.[0]?.[0] ?? "User Name");
+
+            return {
+                totalCredits,
+                name,
+            };
+
+        } catch (error) {
+            setLoader2(false);
+            console.error('getUserCredits error:', error);
+            return 0;
+        } finally {
+            setLoader2(false);
+        }
+    }, [loading]);
+
+    const resetLoader2 = useCallback(() => {
+        setLoader2(true);
+    }, []);
 
     const value = useMemo(() => {
         return {
@@ -101,9 +142,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             topCreditUsers,
             lowCreditUsers,
             dataLoading: loading,
+            loader2,
             userTableData,
+            getUserCredits,
+            resetLoader2,
         };
-    }, [domainCredits, topCreditUsers, lowCreditUsers, loading, userTableData]);
+    }, [domainCredits, topCreditUsers, lowCreditUsers, loading, loader2, userTableData, getUserCredits, resetLoader2]);
 
     return (
         <AppContext.Provider

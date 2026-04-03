@@ -1,7 +1,7 @@
 import { Background, ReactFlow, type ReactFlowInstance, BackgroundVariant } from '@xyflow/react';
 import { useDashboard } from '@/hooks/useDashboard';
 import { useEffect, useRef } from 'react';
-import { nodeTypes } from '../custom_node/root_node';
+import { nodeTypes } from '../custom_node/entity_nodes/root_node';
 
 const EntityCard = () => {
     const { nodes, onNodesChange, edges } = useDashboard();

@@ -13,6 +13,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { formatCompactNumber } from "@/lib/utils"
 import { CiShare1 } from "react-icons/ci";
 import { TbClipboard, TbClipboardCheck } from "react-icons/tb";
+import { Eye } from "lucide-react"
+import { useNavigate } from "react-router-dom"
 
 const headers = [
     "UserId",
@@ -32,6 +34,8 @@ function UsersDataTable({ searchValue, statusValue }: UsersDataTableProps) {
     const [users, setUsers] = useState<Array<{ User_ID: string, Name: string, Status: string, credits: number }>>([])
     const [currentPage, setCurrentPage] = useState(1)
     const [copiedId, setCopiedId] = useState<string | null>(null)
+
+    const navigate = useNavigate();
 
     const handleCopy = (id: string, url: string) => {
         navigator.clipboard.writeText(url)
@@ -124,7 +128,7 @@ function UsersDataTable({ searchValue, statusValue }: UsersDataTableProps) {
                                     exit={{ opacity: 0, scale: 0.95 }}
                                     transition={{ delay: idx * 0.03 }}
                                     key={user.User_ID}
-                                    className="group hover:bg-primary/[0.02] border-b border-border/40 transition-colors"
+                                    className="group hover:bg-primary/2 border-b border-border/40 transition-colors"
                                 >
                                     <TableCell className="w-1/5 px-4 py-2.5 font-mono text-[10px] text-muted-foreground truncate">{user.User_ID}</TableCell>
                                     <TableCell className="w-1/5 px-4 py-2.5 font-bold text-foreground text-sm truncate">{user.Name}</TableCell>
@@ -143,21 +147,24 @@ function UsersDataTable({ searchValue, statusValue }: UsersDataTableProps) {
                                     </TableCell>
                                     <TableCell className="w-1/5 px-4 py-2.5">
                                         <div className="flex items-center gap-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                title="View Profile"
-                                                className="h-9 px-2 text-primary hover:text-primary/80 hover:bg-primary/5 transition-all font-bold border-none text-[10px] uppercase tracking-tight flex items-center gap-1.5"
+                                            <div
+                                                className="h-5 w-5 cursor-pointer transition-all hover:scale-105 active:scale-95"
                                                 onClick={() => globalThis.window.location.href = `https://gwcteq-partner.domo.com/up/${user.User_ID}`}
                                             >
                                                 <CiShare1 className="text-sm opacity-60" size={15} />
-                                            </Button>
+                                            </div>
+
+                                            <div
+                                                className="h-5 w-5 cursor-pointer transition-all hover:scale-105 active:scale-95"
+                                                onClick={() => navigate(`/user-items/${user.User_ID}`)}
+                                            >
+                                                <Eye className="text-sm opacity-60" size={15} />
+                                            </div>
 
                                             <div
                                                 className={`h-5 w-5 cursor-pointer transition-all hover:scale-105 active:scale-95 ${copiedId === user.User_ID ? 'text-green-600' : 'text-primary hover:text-primary/80'
                                                     }`}
                                                 onClick={() => handleCopy(user.User_ID, `https://gwcteq-partner.domo.com/up/${user.User_ID}`)}
-                                                title="Copy profile link"
                                             >
                                                 {copiedId === user.User_ID ? (
                                                     <TbClipboardCheck className="animate-in zoom-in duration-300 text-sm opacity-60" size={17} />

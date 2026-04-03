@@ -3,7 +3,7 @@ import { applyNodeChanges, MarkerType, Position, type Edge, type Node, type Node
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import domo from "ryuu.js";
 
-interface NodeData extends Record<string, unknown> {
+export interface NodeData extends Record<string, unknown> {
     label: string;
     description?: string;
     credits?: string;

@@ -19,7 +19,7 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
                 boxShadow: selected
                     ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
                     : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 overflow: "hidden",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 backdropFilter: "blur(12px)",

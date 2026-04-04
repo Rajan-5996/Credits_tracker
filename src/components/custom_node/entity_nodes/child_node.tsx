@@ -14,7 +14,7 @@ const ChildNode = ({ data }: { data: any }) => {
                 zIndex: 2,
                 boxShadow: "0 8px 30px rgba(0, 0, 0, 0.04)",
                 overflow: "hidden",
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 backdropFilter: "blur(8px)",
                 minWidth: "180px",
             }}

@@ -11,7 +11,7 @@ const UserItems = () => {
     const flowRef = useRef<ReactFlowInstance<any, any> | null>(null);
     const app = useContext(AppContext);
 
-    const { nodes, onNodesChange } = useUserItem(Number(userId));
+    const { nodes, edges, onNodesChange } = useUserItem(Number(userId));
 
     useEffect(() => {
         if (!flowRef.current || nodes.length === 0) {
@@ -36,6 +36,7 @@ const UserItems = () => {
                     flowRef.current = instance;
                 }}
                 nodes={nodes}
+                edges={edges}
                 onNodesChange={onNodesChange}
                 fitView
                 fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}

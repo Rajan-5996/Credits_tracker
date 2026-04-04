@@ -35,7 +35,7 @@ export default function SkeletonLoader() {
                     minHeight: "100vh",
                     display: "flex",
                     flexDirection: "column",
-                    fontFamily: "'Poppins', sans-serif",
+                    fontFamily: "'Montserrat', sans-serif",
                 }}
             >
                 <div
@@ -81,7 +81,7 @@ export default function SkeletonLoader() {
                         <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
                         <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
                     </div>
-                     <div style={box({ width: "100%", height: 720, borderRadius: 24, marginTop: 12 })} />
+                    <div style={box({ width: "100%", height: 720, borderRadius: 24, marginTop: 12 })} />
                     <div style={box({ width: "100%", height: 64, borderRadius: 12, marginTop: 12 })} />
                     <div style={box({ width: "100%", height: 520, borderRadius: 24, marginTop: 12 })} />
                 </div>

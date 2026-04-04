@@ -25,26 +25,26 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
 
     const domainCredits = useCallback(async (): Promise<string> => {
         const res = await domo.post(
-            '/sql/v1/credits_tracker',
+            '/sql/v1/creditstracker',
             'SELECT domain, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY domain',
             { contentType: 'text/plain' }
         ) as DomoResponse;
 
         if (res) {
-            loading && setLoading(false);
+            setLoading(false);
         }
 
         return String(res?.rows?.[0]?.[1] ?? 0);
-    }, [loading]);
+    }, []);
 
     const topCreditUsers = useCallback(async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
-        const res = await domo.post('/sql/v1/credits_tracker',
+        const res = await domo.post('/sql/v1/creditstracker',
             'SELECT User_ID, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY User_ID ORDER BY total_credits DESC LIMIT 5', {
             contentType: 'text/plain'
         }) as DomoResponse;
 
         if (res) {
-            loading && setLoading(false);
+            setLoading(false);
         }
 
         const rows = res?.rows ?? [];
@@ -52,16 +52,16 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             User_ID: String(row?.[0] ?? ""),
             total_credits: Number(row?.[1] ?? 0),
         }));
-    }, [loading])
+    }, [])
 
     const lowCreditUsers = useCallback(async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
-        const res = await domo.post('/sql/v1/credits_tracker',
+        const res = await domo.post('/sql/v1/creditstracker',
             'SELECT User_ID, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY User_ID ORDER BY total_credits ASC LIMIT 5', {
             contentType: 'text/plain'
         }) as DomoResponse;
 
         if (res) {
-            loading && setLoading(false);
+            setLoading(false);
         }
 
         const rows = res?.rows ?? [];
@@ -69,12 +69,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             User_ID: String(row?.[0] ?? ""),
             total_credits: Number(row?.[1] ?? 0),
         }));
-    }, [loading])
+    }, [])
 
     const userTableData = useCallback(async (): Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>> => {
         try {
             const res = await domo.post(
-                '/sql/v1/credits_tracker_table',
+                '/sql/v1/creditstrackertable',
                 `
                     SELECT * FROM dataAlias
                 `,
@@ -82,7 +82,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             ) as DomoResponse;
 
             if (res) {
-                loading && setLoading(false);
+                setLoading(false);
             }
 
             const data = res?.rows?.map((row) => ({
@@ -97,12 +97,12 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             console.error('userTableData error:', error);
             return [];
         }
-    }, [loading]);
+    }, []);
 
     const getUserCredits = useCallback(async (userId: string): Promise<number | { totalCredits: number, name: string }> => {
         try {
             const res = await domo.post(
-                '/sql/v1/credits_tracker_table',
+                '/sql/v1/creditstrackertable',
                 `
                     SELECT Name, total_credits_used
                     FROM dataAlias
@@ -112,7 +112,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             ) as DomoResponse;
 
             if (res) {
-                loading && setLoading(false);
+                setLoading(false);
             }
 
             const totalCredits = Number(res?.rows?.[0]?.[1] ?? 0);
@@ -130,7 +130,7 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         } finally {
             setLoader2(false);
         }
-    }, [loading]);
+    }, []);
 
     const resetLoader2 = useCallback(() => {
         setLoader2(true);

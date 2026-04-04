@@ -1,4 +1,5 @@
 import { Handle, Position } from "@xyflow/react";
+import ChildNode from "./child_node";
 
 const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
     return (
@@ -15,7 +16,7 @@ const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                 boxShadow: selected
                     ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
                     : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
-                fontFamily: "'Poppins', sans-serif",
+                fontFamily: "'Montserrat', sans-serif",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 backdropFilter: "blur(12px)",
             }}
@@ -24,7 +25,6 @@ const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                 style={{
                     fontSize: "16px",
                     fontWeight: "700",
-                    color: "#1e293b",
                     marginBottom: "6px",
                     letterSpacing: "-0.01em",
                 }}
@@ -45,6 +45,7 @@ const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
 
             <Handle
                 type="source"
+                id="source-right"
                 position={Position.Right}
                 style={{
                     background: "#7030B1",
@@ -56,7 +57,8 @@ const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
             />
 
             <Handle
-                type="target"
+                type="source"
+                id="source-left"
                 position={Position.Left}
                 style={{
                     background: "#7030B1",
@@ -64,6 +66,7 @@ const RootNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                     height: 10,
                     border: "2px solid #fff",
                     left: -5,
+                    top: "65%",
                 }}
             />
         </div>
@@ -74,5 +77,5 @@ export default RootNode;
 
 export const nodeTypes = {
     usertNode: RootNode,
-    // childNode: ChildNode,
+    childNode: ChildNode,
 };

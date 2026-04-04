@@ -1,6 +1,6 @@
 {
   "name": "credits_tracker",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "size": {
     "width": 3,
     "height": 3
@@ -12,17 +12,41 @@
   "datasetsMapping": [
     {
       "dataSetId": "83cee105-1028-41fc-903f-49834b44431f",
-      "alias": "credits_tracker",
+      "alias": "creditstracker",
       "fields": [],
       "dql": null
     },
     {
       "dataSetId": "7cfbea27-1392-43da-8dfd-49d1b575c33b",
-      "alias": "credits_tracker_table",
+      "alias": "creditstrackertable",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "3f99c9b1-3736-47e9-b291-329aa8dd9c5d",
+      "alias": "jupyterworkspace",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "1b516219-355d-4ee7-9add-6c77bb8e588e",
+      "alias": "dataflows",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "79bc69ee-8121-4ca3-82af-efc96720d531",
+      "alias": "workflows",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "08f5fe5d-f779-40ae-8aac-9254751a12a4",
+      "alias": "datasets",
       "fields": [],
       "dql": null
     }
   ],
   "id": "a20bdf21-5f1c-4c7a-8c73-cdab396a1ecc",
-  "proxyId": "6b32f9c9-dfe4-4160-96af-1d890c649b78"
+  "proxyId": "b4e63e6d-9ddf-4e14-9ee2-8b3cf9e88d21"
 }

@@ -88,7 +88,7 @@ export const useDashboard = () => {
         const fetchEntityData = async () => {
             try {
                 const res = await domo.post(
-                    '/sql/v1/credits_tracker',
+                    '/sql/v1/creditstracker',
                     'SELECT entityType, SUM(creditsUsed) AS total_credits FROM dataAlias GROUP BY entityType',
                     { contentType: 'text/plain' }
                 ) as DomoResponse;

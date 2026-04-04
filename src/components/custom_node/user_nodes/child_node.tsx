@@ -1,9 +1,93 @@
-const ChildNode = () => {
+import { Handle, Position } from "@xyflow/react";
+
+const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
+    const isLeftNode = data?.side === "left";
+    const isRightNode = data?.side === "right";
+
     return (
-        <div>
+        <div
+            style={{
+                background: "white",
+                border: selected
+                    ? "2px solid #7030B1"
+                    : "1px solid rgba(112, 48, 177, 0.2)",
+                borderRadius: "20px",
+                padding: "18px 22px",
+                minWidth: 220,
+                textAlign: "center",
+                boxShadow: selected
+                    ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
+                    : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
+                fontFamily: "'Montserrat', sans-serif",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                backdropFilter: "blur(12px)",
+            }}
+        >
+            <div
+                style={{
+                    fontSize: "16px",
+                    fontWeight: "700",
+                    marginBottom: "6px",
+                    letterSpacing: "-0.01em",
+                }}
+            >
+                {data?.label || "Metric"}
+            </div>
 
+            <div
+                style={{
+                    fontSize: "24px",
+                    lineHeight: 1,
+                    color: "#7030B1",
+                    fontWeight: 800,
+                    letterSpacing: "-0.03em",
+                }}
+            >
+                {data?.value || data?.description || "0"}
+            </div>
+
+            <div
+                style={{
+                    fontSize: "12px",
+                    color: "#64748b",
+                    fontWeight: 500,
+                    opacity: 0.9,
+                    marginTop: "4px",
+                }}
+            >
+                {data?.description || "No details available"}
+            </div>
+
+            <Handle
+                type="target"
+                id="target-left"
+                position={Position.Left}
+                style={{
+                    display: isLeftNode ? "none" : "block",
+                    background: "#7030B1",
+                    width: 10,
+                    height: 10,
+                    border: "2px solid #fff",
+                    left: -5,
+                }}
+            />
+
+            <Handle
+                type="target"
+                id="target-right"
+                position={Position.Right}
+                style={{
+                    display: isRightNode ? "none" : "block",
+                    background: "#7030B1",
+                    width: 10,
+                    height: 10,
+                    border: "2px solid #fff",
+                    right: -5,
+                    top: "65%",
+                }}
+            />
         </div>
-    )
-}
+    );
+};
 
-export default ChildNode
+export default ChildNode;

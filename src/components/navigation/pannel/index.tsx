@@ -7,6 +7,7 @@ import type { Node } from "@xyflow/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { DatasetDetailDialog } from "@/components/dialog/dataset-detail";
+import Loader2 from "@/components/utils/loader_2";
 
 interface UserNodeData extends Record<string, unknown> {
     label: string;
@@ -37,13 +38,17 @@ const CustomPanel = ({
     const [domoData, setDomoData] = useState<unionDetailsType[] | null>(null);
 
     const detail = useContext(DetailsContext);
+    const fetchDataset = detail?.fetchDataset;
+    const fetchDataflow = detail?.fetchDataflow;
+    const fetchWorkflow = detail?.fetchWorkflow;
+    const fetchJupyterWorkspace = detail?.fetchJupyterWorkspace;
 
     useEffect(() => {
         setSelectedOption(null);
     }, [selectedNode?.id]);
 
     useEffect(() => {
-        if (!selectedNode || !userId || !detail) {
+        if (!selectedNode || !userId) {
             setDomoData(null);
             return;
         }
@@ -56,13 +61,25 @@ const CustomPanel = ({
                 let rows: unionDetailsType[] = [];
 
                 if (normalized.includes("dataset")) {
-                    rows = await detail.fetchDataset(userId);
+                    if (!fetchDataset) {
+                        return;
+                    }
+                    rows = await fetchDataset(userId);
                 } else if (normalized.includes("dataflow")) {
-                    rows = await detail.fetchDataflow(userId);
+                    if (!fetchDataflow) {
+                        return;
+                    }
+                    rows = await fetchDataflow(userId);
                 } else if (normalized.includes("workflow")) {
-                    rows = await detail.fetchWorkflow(userId);
+                    if (!fetchWorkflow) {
+                        return;
+                    }
+                    rows = await fetchWorkflow(userId);
                 } else if (normalized.includes("jupyter")) {
-                    rows = await detail.fetchJupyterWorkspace(userId);
+                    if (!fetchJupyterWorkspace) {
+                        return;
+                    }
+                    rows = await fetchJupyterWorkspace(userId);
                 }
 
                 if (!cancelled) {
@@ -82,7 +99,41 @@ const CustomPanel = ({
         return () => {
             cancelled = true;
         };
-    }, [userId, detail, selectedNode]);
+    }, [
+        userId,
+        selectedNode?.id,
+        selectedNode?.data.label,
+        fetchDataset,
+        fetchDataflow,
+        fetchWorkflow,
+        fetchJupyterWorkspace,
+    ]);
+
+    if (detail?.loading) {
+        return (
+            <aside
+                style={{
+                    width: 360,
+                    height: "100vh",
+                    borderRadius: 0,
+                    background: "rgba(255, 255, 255, 0.92)",
+                    borderLeft: "1px solid rgba(112, 48, 177, 0.16)",
+                    boxShadow: "-18px 0 50px rgba(15, 23, 42, 0.10)",
+                    padding: "24px 20px",
+                    backdropFilter: "blur(14px)",
+                    color: "#0f172a",
+                    display: "flex",
+                    flexDirection: "column",
+                    overflowY: "auto",
+                    scrollbarWidth: "none",
+                    msOverflowStyle: "none",
+                } as React.CSSProperties}
+                className="[&::-webkit-scrollbar]:hidden"
+            >
+                <Loader2 />
+            </aside>
+        )
+    }
 
     return (
         <AnimatePresence mode="wait">

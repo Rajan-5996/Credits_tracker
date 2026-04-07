@@ -2,7 +2,7 @@
 // @ts-ignore
 import type { DomoResponse } from "@/hooks/useDashboard";
 import type { DataflowRecord, DatasetRecord, JupyterWorkspaceRecord, WorkflowRecord } from "@/types/details_type";
-import { createContext, type ReactNode, useCallback, useMemo } from "react";
+import { createContext, type ReactNode, useCallback, useMemo, useState } from "react";
 import domo from "ryuu.js";
 
 export interface DetailsContextType {
@@ -30,6 +30,8 @@ export interface DetailsContextType {
     fetchWorkflow: (userId: string) => Promise<WorkflowRecord[]>;
 
     fetchJupyterWorkspace: (userId: string) => Promise<JupyterWorkspaceRecord[]>;
+
+    loading: boolean;
 }
 
 export const DetailsContext = createContext<DetailsContextType | undefined>(
@@ -37,6 +39,7 @@ export const DetailsContext = createContext<DetailsContextType | undefined>(
 );
 
 export const DetailsProvider = ({ children }: { children: ReactNode }) => {
+    const [loading, setLoading] = useState(false);
 
     const fetchAllCounts = useCallback(async (userId: string) => {
         const uid = Number(userId);
@@ -127,6 +130,7 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchDataset = useCallback(async (userId: string) => {
         try {
+            setLoading(true);
             const res = await domo.post('/sql/v1/datasets', `
                 SELECT DISTINCT *
                 FROM datasets
@@ -156,11 +160,14 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Error fetching dataset count:", err);
             throw err;
+        } finally {
+            setLoading(false);
         }
     }, []);
 
     const fetchDataflow = useCallback(async (userId: string) => {
         try {
+            setLoading(true);
             const res = await domo.post('/sql/v1/dataflows', `
                 SELECT DISTINCT *
                 FROM dataflows
@@ -186,11 +193,15 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Error fetching dataflow count:", err);
             throw err;
+        } finally {
+            setLoading(false);
         }
     }, []);
 
     const fetchWorkflow = useCallback(async (userId: string) => {
         try {
+            setLoading(true);
+
             const res = await domo.post('/sql/v1/workflows', `
                 SELECT DISTINCT *
                 FROM workflows
@@ -220,11 +231,14 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Error fetching workflow count:", err);
             throw err;
+        } finally {
+            setLoading(false);
         }
     }, []);
 
     const fetchJupyterWorkspace = useCallback(async (userId: string) => {
         try {
+            setLoading(true);
             const res = await domo.post('/sql/v1/jupyterworkspace', `
                 SELECT DISTINCT *
                 FROM jupyterworkspace
@@ -244,6 +258,8 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Error fetching jupyter workspace count:", err);
             throw err;
+        } finally {
+            setLoading(false);
         }
     }, []);
 
@@ -253,9 +269,17 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
             fetchDataset,
             fetchDataflow,
             fetchWorkflow,
-            fetchJupyterWorkspace
+            fetchJupyterWorkspace,
+            loading
         };
-    }, [fetchAllCounts])
+    }, [
+        fetchAllCounts,
+        fetchDataset,
+        fetchDataflow,
+        fetchWorkflow,
+        fetchJupyterWorkspace,
+        loading,
+    ]);
 
     return (
         <DetailsContext.Provider

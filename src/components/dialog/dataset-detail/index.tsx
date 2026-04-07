@@ -7,7 +7,7 @@ export function DatasetDetailDialog({ data }: DatasetDetailDialogProps) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <button className="w-full text-left transition hover:opacity-80">
+                <button className="block w-full text-left transition hover:opacity-80">
                     <Dataset data={data} />
                 </button>
             </DialogTrigger>

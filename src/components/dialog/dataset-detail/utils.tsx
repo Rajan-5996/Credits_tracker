@@ -75,7 +75,7 @@ function Section({
     readonly children: ReactNode;
 }) {
     return (
-        <div className="mt-6">
+        <div className="mt-6 first:mt-0">
             <p className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-primary/70">
                 {title}
             </p>

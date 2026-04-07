@@ -1,8 +1,14 @@
 import { CardsContext } from "@/context/cardsContext";
 import { nodeTypes } from "@/components/custom_node/cards_node/root_node";
 import { usePoweredCardGraph } from "@/hooks/usePoweredCardGraph";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
-import { Background, BackgroundVariant, Controls, ReactFlow } from "@xyflow/react";
+import { useCallback, useContext, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
+import { Background, BackgroundVariant, Controls, ReactFlow, type Node } from "@xyflow/react";
+
+const DOMO_BASE_URL = "https://gwcteq-partner.domo.com";
+
+interface PoweredCardNodeData extends Record<string, unknown> {
+    pageId?: string;
+}
 
 const PoweredCard = ({ datasetId }: { datasetId: string }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -47,6 +53,15 @@ const PoweredCard = ({ datasetId }: { datasetId: string }) => {
         }
     }, []);
 
+    const handleNodeClick = useCallback((_event: ReactMouseEvent, node: Node<PoweredCardNodeData>) => {
+        if (!node.id.startsWith("page-")) return;
+
+        const pageId = String(node.data?.pageId || "").trim();
+        if (!pageId) return;
+
+        globalThis.window.open(`${DOMO_BASE_URL}/page/${encodeURIComponent(pageId)}`, "_blank", "noopener,noreferrer");
+    }, []);
+
     return (
         <div
             ref={containerRef}
@@ -69,6 +84,7 @@ const PoweredCard = ({ datasetId }: { datasetId: string }) => {
                 onNodesChange={onNodesChange}
                 edges={edges}
                 nodeTypes={nodeTypes}
+                onNodeClick={handleNodeClick}
                 fitView
                 fitViewOptions={{ maxZoom: 1, padding: 0.2 }}
                 nodesDraggable

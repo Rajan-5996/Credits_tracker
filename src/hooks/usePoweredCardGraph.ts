@@ -104,7 +104,7 @@ export const usePoweredCardGraph = ({
     }, [cardRows]);
 
     const pages = useMemo(() => {
-        const pageMap = new Map<string, { id: string; name: string }>();
+        const pageMap = new Map<string, { id: string; name: string; pageId: string }>();
 
         cardRows.forEach((row) => {
             const pageId = String(row.Page_ID || "").trim();
@@ -115,6 +115,7 @@ export const usePoweredCardGraph = ({
             pageMap.set(key, {
                 id: key,
                 name: pageName,
+                pageId,
             });
         });
 
@@ -156,6 +157,7 @@ export const usePoweredCardGraph = ({
                 title: page.name,
                 subtitle: "Page",
                 hideSource: true,
+                pageId: page.pageId,
             },
         }));
 

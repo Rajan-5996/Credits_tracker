@@ -3,7 +3,7 @@ import type { JupyterWorkspaceRecord } from "@/types/details_type";
 const JupyterWorkflows = ({ data }: { data: JupyterWorkspaceRecord }) => {
     return (
         <div>
-            jupyter workspace
+            jupyter workspace {JSON.stringify(data)}
         </div>
     )
 }

@@ -135,6 +135,7 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
                 SELECT DISTINCT *
                 FROM datasets
                 WHERE Owner_User_ID = ${Number(userId)}
+                ORDER BY Cards_Powered DESC
                 LIMIT 50
             `, { contentType: 'text/plain' }) as DomoResponse;
 

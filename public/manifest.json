@@ -1,6 +1,6 @@
 {
   "name": "credits_tracker",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "size": {
     "width": 3,
     "height": 3
@@ -45,8 +45,14 @@
       "alias": "datasets",
       "fields": [],
       "dql": null
+    },
+    {
+      "dataSetId": "719f7960-04c7-40e5-be7a-b2ecd459a7b1",
+      "alias": "cardsanddatasets",
+      "fields": [],
+      "dql": null
     }
   ],
   "id": "a20bdf21-5f1c-4c7a-8c73-cdab396a1ecc",
-  "proxyId": "b4e63e6d-9ddf-4e14-9ee2-8b3cf9e88d21"
+  "proxyId": "c3c07dca-50d4-4820-9a91-b3eec28a8ef2"
 }

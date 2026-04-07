@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import type { DatasetDetailDialogProps } from "./types";
 import { BoolChip, Row, Section, StatusBadge, formatDate } from "./utils";
+import PoweredCard from "@/components/navigation/pannel/powered_card";
 
 export function DatasetDetailDialogContent({ data }: DatasetDetailDialogProps) {
     const [activeTab, setActiveTab] = useState<"overview" | "cards">("overview");
@@ -29,10 +30,10 @@ export function DatasetDetailDialogContent({ data }: DatasetDetailDialogProps) {
                         </>
                     )}
 
-                    {data.Source_Type && (
+                    {data.Import_Type && (
                         <>
                             <span className="opacity-50">•</span>
-                            <span>source : {data.Source_Type}</span>
+                            <span>source : {data.Import_Type}</span>
                         </>
                     )}
 
@@ -69,9 +70,9 @@ export function DatasetDetailDialogContent({ data }: DatasetDetailDialogProps) {
                 </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-4 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            <div className={`flex-1 min-h-0 [&::-webkit-scrollbar]:hidden ${activeTab === "overview" ? "overflow-y-auto px-6 py-4" : "overflow-hidden p-0"}`}>
                 {activeTab === "overview" ? (
-                    <>
+                    <div className="h-full">
                         <Section title="Overview">
                             <div className="flex items-center justify-between px-3 py-2.5">
                                 <span className="text-sm text-muted-foreground">Status</span>
@@ -110,10 +111,10 @@ export function DatasetDetailDialogContent({ data }: DatasetDetailDialogProps) {
                                 </div>
                             </Section>
                         )}
-                    </>
+                    </div>
                 ) : (
-                    <div className="text-sm text-muted-foreground">
-                        Powered cards content goes here...
+                    <div className="h-95 w-full">
+                        <PoweredCard datasetId={String(data.ID)} />
                     </div>
                 )}
             </div>

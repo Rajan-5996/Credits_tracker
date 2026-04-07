@@ -55,8 +55,8 @@ const NavBar = () => {
                             width={35}
                         />
                         <div className="min-w-0 flex flex-col">
-                            <h1 className="truncate text-lg font-black tracking-tighter text-foreground sm:text-xl uppercase leading-none">
-                                GWC <span className="text-primary font-black">Data.ai</span>
+                            <h1 className="truncate text-lg font-semibold tracking-tighter text-foreground sm:text-xl uppercase leading-none">
+                                GWC <span className="text-primary font-semibold">Data.ai</span>
                             </h1>
                             <a
                                 href="https://gwcteq-partner.domo.com/"

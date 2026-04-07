@@ -3,6 +3,12 @@ import { Handle, Position } from "@xyflow/react";
 const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
     const isLeftNode = data?.side === "left";
     const isRightNode = data?.side === "right";
+    const labelText = String(data?.label || "").toLowerCase();
+    const isWorkflowOrDataflow =
+        labelText.includes("workflow") || labelText.includes("dataflow");
+
+    const activeCount = Number(data?.activeCount ?? 0);
+    const inactiveCount = Number(data?.inactiveCount ?? 0);
 
     return (
         <div
@@ -21,6 +27,7 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                 fontFamily: "'Montserrat', sans-serif",
                 transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 backdropFilter: "blur(12px)",
+                cursor: "pointer",
             }}
         >
             <div
@@ -55,7 +62,25 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                     marginTop: "4px",
                 }}
             >
-                {data?.description || "No details available"}
+                {isWorkflowOrDataflow ? (
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            gap: "14px",
+                            marginTop: "6px",
+                        }}
+                    >
+                        <span className="text-green-400 bg-green-50 px-2 py-1 rounded">
+                            Active: <strong>{activeCount}</strong>
+                        </span>
+                        <span className="text-red-400 bg-red-50 px-2 py-1 rounded">
+                            Inactive: <strong>{inactiveCount}</strong>
+                        </span>
+                    </div>
+                ) : (
+                    data?.description || "No details available"
+                )}
             </div>
 
             <Handle

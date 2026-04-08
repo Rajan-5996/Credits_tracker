@@ -1,6 +1,5 @@
 import { DetailsContext } from "@/context/detailsContext";
 import type { DataflowRecord, DatasetRecord, JupyterWorkspaceRecord, unionDetailsType, WorkflowRecord } from "@/types/details_type";
-import Dataflow from "./dataflow";
 import JupyterWorkflows from "./jupyter_workspace";
 import Workflow from "./workflow";
 import type { Node } from "@xyflow/react";
@@ -8,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { DatasetDetailDialog } from "@/components/dialog/dataset-detail";
 import Loader2 from "@/components/utils/loader_2";
+import Dataflow from "./dataflow";
 
 interface UserNodeData extends Record<string, unknown> {
     label: string;
@@ -164,7 +164,7 @@ const CustomPanel = ({
                 >
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
                         <div style={{ marginTop: 6, lineHeight: 1.2 }} className="font-semibold text-gray-700 text-xl">
-                            {selectedNode.data.label}
+                            {selectedNode.data.value}{" "}{selectedNode.data.label}
                         </div>
                         <button
                             type="button"
@@ -185,14 +185,6 @@ const CustomPanel = ({
                             &times;
                         </button>
                     </div>
-
-                    {typeof selectedNode.data.value === "string" && selectedNode.data.value.length > 0 && (
-                        <div style={{ marginTop: 14, padding: "10px 12px", borderRadius: 14, background: "rgba(112, 48, 177, 0.06)", fontSize: 14, fontWeight: 700, color: "#1e293b" }}>
-                            <h1 className="opacity-80">
-                                Total {nodeLabel} : {selectedNode.data.value}
-                            </h1>
-                        </div>
-                    )}
 
                     {isWorkflowOrDataflow && (selectedNode.data.activeCount !== undefined || selectedNode.data.inactiveCount !== undefined) && (
                         <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 10 }}>
@@ -237,7 +229,7 @@ const CustomPanel = ({
                     )}
 
                     {isWorkflowOrDataflow && lowerNodeLabel.includes("dataflow") && selectedOption && domoData && (
-                        <div style={{ marginTop: 14 }}>
+                        <div style={{ marginTop: 14 }} className="flex flex-col gap-2">
                             {domoData.map((record, index) => (
                                 <Dataflow key={index} data={record as DataflowRecord} status={selectedOption} />
                             ))}

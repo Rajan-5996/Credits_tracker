@@ -9,3 +9,4 @@ const Loader2 = () => {
 }
 
 export default Loader2
+

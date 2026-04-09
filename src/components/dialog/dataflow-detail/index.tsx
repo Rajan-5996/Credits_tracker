@@ -10,8 +10,6 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import type { DataflowRecord } from "@/types/details_type";
 import {
-    CheckCircle,
-    XCircle,
     Database,
     GitBranch,
     Clock,
@@ -30,8 +28,6 @@ export function DataflowDetailDialog({
     const lastUpdatedLabel = data.last_updated_date
         ? new Date(data.last_updated_date).toLocaleString()
         : "N/A";
-
-    const isSuccess = data.status === "SUCCESS";
 
     const fields = [
         { label: "Inputs", value: data.inputs, icon: <Database size={12} className="text-primary" /> },

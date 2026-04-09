@@ -9,3 +9,4 @@ const JupyterWorkflows = ({ data }: { data: JupyterWorkspaceRecord }) => {
 }
 
 export default JupyterWorkflows
+

@@ -25,3 +25,4 @@ export function formatCompactNumber(number: number | string): string {
   }
   return num.toString();
 }
+

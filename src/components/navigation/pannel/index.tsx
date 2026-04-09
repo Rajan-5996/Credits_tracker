@@ -53,6 +53,11 @@ const CustomPanel = ({
             return;
         }
 
+        if (isWorkflowOrDataflow && !selectedOption) {
+            setDomoData(null);
+            return;
+        }
+
         let cancelled = false;
         const normalized = String(selectedNode.data.label ?? "").toLowerCase();
 
@@ -69,12 +74,12 @@ const CustomPanel = ({
                     if (!fetchDataflow) {
                         return;
                     }
-                    rows = await fetchDataflow(userId);
+                    rows = await fetchDataflow(userId, selectedOption ?? undefined);
                 } else if (normalized.includes("workflow")) {
                     if (!fetchWorkflow) {
                         return;
                     }
-                    rows = await fetchWorkflow(userId);
+                    rows = await fetchWorkflow(userId, selectedOption ?? undefined);
                 } else if (normalized.includes("jupyter")) {
                     if (!fetchJupyterWorkspace) {
                         return;
@@ -103,6 +108,8 @@ const CustomPanel = ({
         userId,
         selectedNode?.id,
         selectedNode?.data.label,
+        selectedOption,
+        isWorkflowOrDataflow,
         fetchDataset,
         fetchDataflow,
         fetchWorkflow,
@@ -264,3 +271,4 @@ const CustomPanel = ({
 }
 
 export default CustomPanel
+

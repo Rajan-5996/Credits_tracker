@@ -9,3 +9,4 @@ const Workflow = ({ data, status }: { data: WorkflowRecord; status: "active" | "
 }
 
 export default Workflow
+

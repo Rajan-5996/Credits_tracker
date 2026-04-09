@@ -3,6 +3,7 @@ import { UserProvider } from "./context/currentUserContext"
 import { AppProvider } from "./context/appContext"
 import { DetailsProvider } from "./context/detailsContext"
 import { CardsProvider } from "./context/cardsContext"
+import { DataflowLineageProvider } from "./context/dataflow_lineage"
 
 const AppProviders = ({ children }: { children: ReactNode }) => {
     return (
@@ -10,7 +11,9 @@ const AppProviders = ({ children }: { children: ReactNode }) => {
             <AppProvider>
                 <DetailsProvider>
                     <CardsProvider>
-                        {children}
+                        <DataflowLineageProvider>
+                            {children}
+                        </DataflowLineageProvider>
                     </CardsProvider>
                 </DetailsProvider>
             </AppProvider>
@@ -19,3 +22,4 @@ const AppProviders = ({ children }: { children: ReactNode }) => {
 }
 
 export default AppProviders
+

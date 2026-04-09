@@ -20,7 +20,7 @@ export const sourcesMap = {
     "workbench-odbc": "",
     "csv3": "",
     "microsoft-onedrive-business": "",
-    "onedrive": "",
+    "onedrive.png": "",
     "mysql": "",
     "mongodb-v2": "",
     "mongodb-fast-api-1012b98e-b8fa-4655-8455-5e24cb746ed6": "",

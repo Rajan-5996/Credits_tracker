@@ -25,9 +25,9 @@ export interface DetailsContextType {
 
     fetchDataset: (userId: string) => Promise<DatasetRecord[]>;
 
-    fetchDataflow: (userId: string) => Promise<DataflowRecord[]>;
+    fetchDataflow: (userId: string, status?: "active" | "inactive") => Promise<DataflowRecord[]>;
 
-    fetchWorkflow: (userId: string) => Promise<WorkflowRecord[]>;
+    fetchWorkflow: (userId: string, status?: "active" | "inactive") => Promise<WorkflowRecord[]>;
 
     fetchJupyterWorkspace: (userId: string) => Promise<JupyterWorkspaceRecord[]>;
 
@@ -166,13 +166,25 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
-    const fetchDataflow = useCallback(async (userId: string) => {
+    const fetchDataflow = useCallback(async (userId: string, status?: "active" | "inactive") => {
+        console.log("Fetching dataflows with status:", status);
         try {
             setLoading(true);
+            var condition = "";
+
+            if (status === "active") {
+                condition = `AND \`Last Executed Date\` >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)`;
+            } else if (status === "inactive") {
+                condition = `AND \`Last Executed Date\` < DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)`;
+            }
+
+            console.log(condition)
+
             const res = await domo.post('/sql/v1/dataflows', `
                 SELECT DISTINCT *
                 FROM dataflows
                 WHERE \`Owner ID\` = ${Number(userId)}
+                ${condition}
                 LIMIT 50
             `, { contentType: 'text/plain' }) as DomoResponse;
 
@@ -199,14 +211,22 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
-    const fetchWorkflow = useCallback(async (userId: string) => {
+    const fetchWorkflow = useCallback(async (userId: string, status?: "active" | "inactive") => {
         try {
             setLoading(true);
+            let condition = "";
+
+            if (status === "active") {
+                condition = `AND \`Start Time\` >= DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)`;
+            } else if (status === "inactive") {
+                condition = `AND \`Start Time\` < DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR)`;
+            }
 
             const res = await domo.post('/sql/v1/workflows', `
                 SELECT DISTINCT *
                 FROM workflows
                 WHERE Owner = ${Number(userId)}
+                ${condition}
                 LIMIT 50
             `, { contentType: 'text/plain' }) as DomoResponse;
 
@@ -290,3 +310,4 @@ export const DetailsProvider = ({ children }: { children: ReactNode }) => {
         </DetailsContext.Provider>
     );
 };
+

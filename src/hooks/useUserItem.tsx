@@ -8,6 +8,8 @@ interface NodeData extends Record<string, unknown> {
     label: string;
     description?: string;
     value?: string;
+    activeCount?: number;
+    inactiveCount?: number;
     side?: "left" | "right";
 }
 
@@ -73,12 +75,16 @@ const useUserItem = (userId: number) => {
                         key: "dataflows",
                         label: "Dataflows",
                         value: countsResult.dataflows.count,
+                        activeCount: countsResult.dataflows.activeCount,
+                        inactiveCount: countsResult.dataflows.inactiveCount,
                         description: "Connected dataflows",
                     },
                     {
                         key: "workflows",
                         label: "Workflows",
                         value: countsResult.workflows.count,
+                        activeCount: countsResult.workflows.activeCount,
+                        inactiveCount: countsResult.workflows.inactiveCount,
                         description: "Active workflows",
                     },
                     {
@@ -106,6 +112,8 @@ const useUserItem = (userId: number) => {
                     label: metric.label,
                     value: formatCompactNumber(metric.value),
                     description: metric.description,
+                    activeCount: metric.activeCount,
+                    inactiveCount: metric.inactiveCount,
                     side: "left",
                 },
                 sourcePosition: Position.Right,
@@ -121,6 +129,8 @@ const useUserItem = (userId: number) => {
                     label: metric.label,
                     value: formatCompactNumber(metric.value),
                     description: metric.description,
+                    activeCount: metric.activeCount,
+                    inactiveCount: metric.inactiveCount,
                     side: "right",
                 },
                 sourcePosition: Position.Right,
@@ -184,3 +194,4 @@ const useUserItem = (userId: number) => {
 }
 
 export default useUserItem;
+

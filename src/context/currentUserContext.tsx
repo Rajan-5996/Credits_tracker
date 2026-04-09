@@ -77,3 +77,4 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     </UserContext.Provider>
   );
 };
+

@@ -1,4 +1,4 @@
-export { default as NavBar } from "./navbar"
+export { default as NavBar } from "./navigation/navbar"
 export { default as DomainCredits } from "./dashboard/kpi's/domain_credits"
 export { default as EntityCard } from "./dashboard/entity_card"
 export { default as EntityChildNode } from "./custom_node/entity_nodes/child_node";
@@ -13,3 +13,9 @@ export { default as Filter } from "./dashboard/filters"
 export { default as UserRootNode } from "./custom_node/user_nodes/root_node"
 export { default as UserChildNode } from "./custom_node/user_nodes/child_node"
 export { default as Loader2 } from "./utils/loader_2"
+export { default as CustomPanel } from "./navigation/pannel"
+export { default as PanelWorkflow } from "./navigation/pannel/workflow"
+export { default as PanelJupyterWorkflows } from "./navigation/pannel/jupyter_workspace"
+export { default as PanelDataflow } from "./navigation/pannel/dataflow"
+export { default as PanelDataset } from "./navigation/pannel/dataset"
+

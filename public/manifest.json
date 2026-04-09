@@ -1,15 +1,22 @@
 {
   "name": "credits_tracker",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "size": {
     "width": 3,
     "height": 3
   },
-  "mapping": [],
-  "collections": [],
   "workflowMapping": [],
   "packagesMapping": [],
+  "id": "484167ca-c393-4dfe-95e3-a9d3f5e73024",
+  "proxyId": "8d65d7c1-50a2-4375-b28c-61573650640e",
+  "fileName": "manifest.json",
   "datasetsMapping": [
+    {
+      "dataSetId": "e8c8a65c-4466-4f6a-8033-3c0a09fb75df",
+      "alias": "dataflowinputs",
+      "fields": [],
+      "dql": null
+    },
     {
       "dataSetId": "83cee105-1028-41fc-903f-49834b44431f",
       "alias": "creditstracker",
@@ -45,8 +52,20 @@
       "alias": "datasets",
       "fields": [],
       "dql": null
+    },
+    {
+      "dataSetId": "719f7960-04c7-40e5-be7a-b2ecd459a7b1",
+      "alias": "cardsanddatasets",
+      "fields": [],
+      "dql": null
+    },
+    {
+      "dataSetId": "7e0b9794-3a05-48b2-888f-bc74190cef2c",
+      "alias": "dataflowoutputs",
+      "fields": [],
+      "dql": null
     }
   ],
-  "id": "a20bdf21-5f1c-4c7a-8c73-cdab396a1ecc",
-  "proxyId": "b4e63e6d-9ddf-4e14-9ee2-8b3cf9e88d21"
+
+  "collectionsMapping": []
 }

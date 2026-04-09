@@ -60,3 +60,4 @@ const EntityCard = () => {
 }
 
 export default EntityCard
+

@@ -8,6 +8,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { DataflowLineageContext } from "@/context/dataflow_lineage";
 import type { DataflowRecord } from "@/types/details_type";
 import {
     Database,
@@ -17,10 +18,15 @@ import {
     FileText,
     ExternalLink,
 } from "lucide-react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 export function DataflowDetailDialog({
     data,
 }: Readonly<{ data: DataflowRecord }>) {
+    const dataflow = useContext(DataflowLineageContext);
+    const [open, setOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState("overview");
+    const loadedLineageFor = useRef<number | null>(null);
     const lastExecutedLabel = data.last_executed_date
         ? new Date(data.last_executed_date).toLocaleString()
         : "N/A";
@@ -36,8 +42,34 @@ export function DataflowDetailDialog({
         { label: "Updated", value: lastUpdatedLabel, icon: <CalendarClock size={12} className="text-primary" /> },
     ];
 
+    useEffect(() => {
+        const lineageContext = dataflow;
+
+        if (!open || activeTab !== "lineage" || !lineageContext) {
+            return;
+        }
+
+        const dataflowId = Number(data.id);
+
+        if (loadedLineageFor.current === dataflowId) {
+            return;
+        }
+
+        async function fetchLineage() {
+            try {
+                const lineageData = await lineageContext!.getLineageData(dataflowId);
+                loadedLineageFor.current = dataflowId;
+                console.log('Lineage Data:', lineageData);
+            } catch (error) {
+                console.error("Error fetching lineage data:", error);
+            }
+        }
+
+        fetchLineage();
+    }, [activeTab, data.id, dataflow, open]);
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <div className="inline-flex cursor-pointer items-center px-3 py-1.5 text-sm font-semibold text-primary transition hover:underline">
                     View Details
@@ -57,7 +89,7 @@ export function DataflowDetailDialog({
                     </div>
                 </DialogHeader>
 
-                <Tabs defaultValue="overview" className="flex min-h-0 flex-1 flex-col">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
                     <TabsList className="shrink-0 justify-start gap-0 rounded-none border-b border-[#f0eef5] bg-transparent px-6 pb-0 pt-0 h-auto">
                         {["overview", "lineage"].map((tab) => (
                             <TabsTrigger

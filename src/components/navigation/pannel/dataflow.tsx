@@ -1,7 +1,5 @@
 import { DataflowDetailDialog } from "@/components/dialog/dataflow-detail";
-import { DataflowLineageContext } from "@/context/dataflow_lineage";
 import type { DataflowRecord } from "@/types/details_type";
-import { useContext, useEffect } from "react";
 
 const Dataflow = ({
     data,
@@ -10,14 +8,9 @@ const Dataflow = ({
     data: DataflowRecord;
     status: "active" | "inactive";
 }) => {
-    const dataflow = useContext(DataflowLineageContext);
     const lastRunLabel = data.last_executed_date
         ? new Date(data.last_executed_date).toLocaleString()
         : "N/A";
-
-    useEffect(() => {
-        console.log(dataflow?.getLineageData(Number(data?.id)));
-    }, [dataflow])
 
     return (
         <div className="w-full max-w-sm rounded border bg-white p-4 shadow-sm hover:shadow-md transition">

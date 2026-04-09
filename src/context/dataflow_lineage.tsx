@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // @ts-ignore
-import { createContext, useState, useEffect, ReactNode, useMemo } from "react";
+import { createContext, ReactNode, useCallback, useMemo } from "react";
 import domo from "ryuu.js";
 
 export interface DataflowLineageContextType {
@@ -13,21 +13,35 @@ export const DataflowLineageContext = createContext<DataflowLineageContextType |
 
 export const DataflowLineageProvider = ({ children }: { children: ReactNode }) => {
 
-    const getLineageData = async (dataflowId: number) => {
+    const getLineageData = useCallback(async (dataflowId: number) => {
+        const id = Number(dataflowId);
+
+        if (!Number.isFinite(id)) {
+            throw new Error(`Invalid dataflowId: ${dataflowId}`);
+        }
+
         const [inputDatasets, outputDatasets] = await Promise.all([
             domo.post('/sql/v1/dataflowinputs',
-                `SELECT \`Datasource Input ID\` FROM dataflowinputs WHERE dataflow_id = ${dataflowId}`
+                `
+                    SELECT \`Datasource Input ID\`
+                    FROM dataflowinputs
+                    WHERE \`Dataflow ID\` = ${id}
+                `,
+                { contentType: 'text/plain' }
             ),
 
             domo.post('/sql/v1/dataflowoutputs',
-                `SELECT \`Datasource Output ID\` FROM dataflowoutputs WHERE dataflow_id = ${dataflowId}`
+                `
+                    SELECT \`Datasource Output ID\`
+                    FROM dataflowoutputs
+                    WHERE \`Dataflow ID\` = ${id}
+                `,
+                { contentType: 'text/plain' }
             )
         ]);
 
-        console.log('Input Datasets:', inputDatasets);
-        console.log('Output Datasets:', outputDatasets);
         return { inputDatasets, outputDatasets };
-    }
+    }, []);
 
     const value = useMemo(() => {
         return {

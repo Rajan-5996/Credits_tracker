@@ -2,7 +2,7 @@ import { CustomPanel, Loader2 } from "@/components";
 import { nodeTypes } from "@/components/custom_node/user_nodes/root_node";
 import { AppContext } from "@/context/appContext";
 import useUserItem from "@/hooks/useUserItem";
-import { Background, BackgroundVariant, Panel, ReactFlow, type Node, type ReactFlowInstance } from "@xyflow/react";
+import { Panel, ReactFlow, type Node, type ReactFlowInstance } from "@xyflow/react";
 import { useContext, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { useParams } from "react-router-dom"
 

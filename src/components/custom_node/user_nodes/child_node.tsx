@@ -13,29 +13,38 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
     return (
         <div
             style={{
-                background: "white",
-                border: selected
-                    ? "2px solid #7030B1"
-                    : "1px solid rgba(112, 48, 177, 0.2)",
-                borderRadius: "20px",
-                padding: "18px 22px",
-                minWidth: 220,
+                background: "#ffffff",
+                border: selected ? "2px solid #1a73e8" : "1px solid #e2e8f0",
+                borderRadius: "6px",
+                padding: "16px 20px",
+                minWidth: 200,
                 textAlign: "center",
                 boxShadow: selected
-                    ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
-                    : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
-                fontFamily: "'Montserrat', sans-serif",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                backdropFilter: "blur(12px)",
+                    ? "0 4px 12px rgba(26,115,232,0.15)"
+                    : "0 1px 3px rgba(0,0,0,0.06)",
+                fontFamily: "'Roboto', sans-serif",
                 cursor: "pointer",
+                transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = "#cbd5e1";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
+                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+                (e.currentTarget as HTMLDivElement).style.borderColor = selected ? "#1a73e8" : "#e2e8f0";
+                (e.currentTarget as HTMLDivElement).style.boxShadow = selected ? "0 4px 12px rgba(26,115,232,0.15)" : "0 1px 3px rgba(0,0,0,0.06)";
+                (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
             }}
         >
             <div
                 style={{
-                    fontSize: "16px",
-                    fontWeight: "700",
-                    marginBottom: "6px",
-                    letterSpacing: "-0.01em",
+                    fontSize: "12px",
+                    fontWeight: "600",
+                    marginBottom: "4px",
+                    color: "#64748b",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
                 }}
             >
                 {data?.label || "Metric"}
@@ -44,10 +53,9 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
             <div
                 style={{
                     fontSize: "24px",
-                    lineHeight: 1,
-                    color: "#7030B1",
-                    fontWeight: 800,
-                    letterSpacing: "-0.03em",
+                    lineHeight: 1.2,
+                    color: "#1e293b",
+                    fontWeight: 700,
                 }}
             >
                 {data?.value || data?.description || "0"}
@@ -55,11 +63,9 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
 
             <div
                 style={{
-                    fontSize: "12px",
-                    color: "#64748b",
-                    fontWeight: 500,
-                    opacity: 0.9,
-                    marginTop: "4px",
+                    fontSize: "11px",
+                    color: "#94a3b8",
+                    marginTop: "6px",
                 }}
             >
                 {isWorkflowOrDataflow ? (
@@ -67,15 +73,31 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                         style={{
                             display: "flex",
                             justifyContent: "center",
-                            gap: "14px",
+                            gap: "8px",
                             marginTop: "6px",
                         }}
                     >
-                        <span className="text-green-400 bg-green-50 px-2 py-1 rounded">
-                            Active: <strong>{activeCount}</strong>
+                        <span style={{
+                            color: "#16a34a",
+                            background: "#f0fdf4",
+                            border: "1px solid #bbf7d0",
+                            padding: "2px 8px",
+                            borderRadius: "4px",
+                            fontWeight: 600,
+                            fontSize: "10px",
+                        }}>
+                            Active: {activeCount}
                         </span>
-                        <span className="text-red-400 bg-red-50 px-2 py-1 rounded">
-                            Inactive: <strong>{inactiveCount}</strong>
+                        <span style={{
+                            color: "#dc2626",
+                            background: "#fef2f2",
+                            border: "1px solid #fecaca",
+                            padding: "2px 8px",
+                            borderRadius: "4px",
+                            fontWeight: 600,
+                            fontSize: "10px",
+                        }}>
+                            Inactive: {inactiveCount}
                         </span>
                     </div>
                 ) : (
@@ -89,11 +111,14 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                 position={Position.Left}
                 style={{
                     display: isLeftNode ? "none" : "block",
-                    background: "#7030B1",
-                    width: 10,
-                    height: 10,
+                    background: "#94a3b8",
+                    width: 8,
+                    height: 8,
                     border: "2px solid #fff",
-                    left: -5,
+                    left: -4,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    borderRadius: "50%",
                 }}
             />
 
@@ -103,12 +128,14 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
                 position={Position.Right}
                 style={{
                     display: isRightNode ? "none" : "block",
-                    background: "#7030B1",
-                    width: 10,
-                    height: 10,
+                    background: "#94a3b8",
+                    width: 8,
+                    height: 8,
                     border: "2px solid #fff",
-                    right: -5,
-                    top: "65%",
+                    right: -4,
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    borderRadius: "50%",
                 }}
             />
         </div>
@@ -116,4 +143,3 @@ const ChildNode = ({ data, selected }: { data?: any; selected?: boolean }) => {
 };
 
 export default ChildNode;
-

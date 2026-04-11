@@ -129,8 +129,8 @@ export const useDashboard = () => {
                         target: nodeId,
                         animated: true,
                         zIndex: 0,
-                        markerEnd: { type: MarkerType.Arrow },
-                        style: { stroke: '#185FA5', strokeWidth: 1.5 },
+                        markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
+                        style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
                     });
                 });
 
@@ -157,8 +157,8 @@ export const useDashboard = () => {
                         target: nodeId,
                         animated: true,
                         zIndex: 0,
-                        markerEnd: { type: MarkerType.Arrow },
-                        style: { stroke: '#7F77DD', strokeWidth: 1.2 },
+                        markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
+                        style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
                     });
                 });
 

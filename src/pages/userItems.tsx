@@ -57,7 +57,7 @@ const UserItems = () => {
     };
 
     return (
-        <div style={{ width: '100%', height: '100vh', background: 'transparent', display: 'block' }}>
+        <div style={{ width: '100%', height: '100vh', padding: 0, margin: 0, display: 'block', position: 'relative' }}>
             <ReactFlow
                 onInit={(instance) => {
                     flowRef.current = instance;
@@ -71,11 +71,6 @@ const UserItems = () => {
                 fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}
                 nodeTypes={nodeTypes}
             >
-                <Background
-                    color="#7030B1"
-                    variant={BackgroundVariant.Cross}
-                    style={{ opacity: 0.12 }}
-                />
                 <Panel position="top-left">
                     <CustomPanel selectedNode={selectedNode} setSelectedNodeId={setSelectedNodeId} userId={userId ?? ""} />
                 </Panel>
@@ -85,4 +80,3 @@ const UserItems = () => {
 }
 
 export default UserItems
-

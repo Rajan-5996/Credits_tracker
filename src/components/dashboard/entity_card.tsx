@@ -2,6 +2,7 @@ import { Background, ReactFlow, type ReactFlowInstance, BackgroundVariant } from
 import { useDashboard } from '@/hooks/useDashboard';
 import { useEffect, useRef } from 'react';
 import { nodeTypes } from '../custom_node/entity_nodes/root_node';
+import { TbTopologyStar3 } from "react-icons/tb";
 
 const EntityCard = () => {
     const { nodes, onNodesChange, edges } = useDashboard();
@@ -20,44 +21,66 @@ const EntityCard = () => {
     }, [nodes.length, edges.length]);
 
     return (
-        <div style={{ width: '100%', height: '100%', minHeight: 720, background: 'transparent' }} className="relative group">
-            <div className="absolute top-6 left-6 z-20 flex flex-col pointer-events-none select-none bg-white px-6 py-3 rounded-md">
-                <span className="text-[0.6rem] font-black uppercase tracking-[0.2em] text-primary/40 leading-none mb-1.5 ml-0.5">RELATIONSHIP VIEW</span>
-                <h2 className="text-2xl font-black tracking-tighter text-[#7030B1] drop-shadow-sm uppercase">
-                    Powered <span className="text-foreground">Entity</span>
-                </h2>
-            </div>
-            <ReactFlow
-                onInit={(instance) => {
-                    flowRef.current = instance;
+        <div className="flex flex-col w-full h-full min-h-[720px] rounded-sm shadow-sm relative overflow-hidden"
+            style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
+        >
+            {/* Header Bar */}
+            <div className="flex items-center gap-2 px-4 py-3 shrink-0 relative z-10"
+                style={{
+                    background: '#f8f9fa',
+                    borderBottom: '1px solid #e2e8f0',
                 }}
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                nodeTypes={nodeTypes}
-                fitView
-                fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}
-                preventScrolling={false}
-                zoomOnScroll={false}
-                zoomOnPinch={false}
-                zoomOnDoubleClick={false}
-                panOnScroll={false}
-                panOnDrag={false}
-                nodesDraggable={false}
-                nodesConnectable={false}
-                elementsSelectable={false}
             >
-                <Background
-                    color="#7030B1"
-                    gap={32}
-                    size={5}
-                    variant={BackgroundVariant.Cross}
-                    style={{ opacity: 0.12 }}
-                />
-            </ReactFlow>
+                <TbTopologyStar3 size={18} style={{ color: '#1a73e8' }} />
+                <h2 className="text-[13px] font-bold tracking-wider uppercase leading-none"
+                    style={{ color: '#1e293b', fontFamily: "'Roboto', sans-serif" }}
+                >
+                    Relationship Map
+                </h2>
+                <span className="ml-auto text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-sm"
+                    style={{
+                        color: '#1a73e8',
+                        background: 'rgba(26,115,232,0.06)',
+                        border: '1px solid rgba(26,115,232,0.15)',
+                    }}
+                >
+                    Interactive
+                </span>
+            </div>
+
+            {/* Graph Canvas */}
+            <div className="flex-1 w-full relative">
+                <ReactFlow
+                    onInit={(instance) => {
+                        flowRef.current = instance;
+                    }}
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    nodeTypes={nodeTypes}
+                    fitView
+                    fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}
+                    preventScrolling={false}
+                    zoomOnScroll={false}
+                    zoomOnPinch={false}
+                    zoomOnDoubleClick={false}
+                    panOnScroll={false}
+                    panOnDrag={false}
+                    nodesDraggable={false}
+                    nodesConnectable={false}
+                    elementsSelectable={false}
+                >
+                    <Background
+                        color="#4a5568"
+                        gap={32}
+                        size={1}
+                        variant={BackgroundVariant.Dots}
+                        style={{ opacity: 0.3 }}
+                    />
+                </ReactFlow>
+            </div>
         </div>
     )
 }
 
 export default EntityCard
-

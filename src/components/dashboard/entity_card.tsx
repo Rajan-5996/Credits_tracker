@@ -24,7 +24,6 @@ const EntityCard = () => {
         <div className="flex flex-col w-full h-full min-h-[720px] rounded-sm shadow-sm relative overflow-hidden"
             style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}
         >
-            {/* Header Bar */}
             <div className="flex items-center gap-2 px-4 py-3 shrink-0 relative z-10"
                 style={{
                     background: '#f8f9fa',
@@ -48,7 +47,6 @@ const EntityCard = () => {
                 </span>
             </div>
 
-            {/* Graph Canvas */}
             <div className="flex-1 w-full relative">
                 <ReactFlow
                     onInit={(instance) => {

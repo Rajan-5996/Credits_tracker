@@ -162,7 +162,10 @@ export const useDashboard = () => {
                     });
                 });
 
-                setNodes([...getInitialNodeData(), ...newNodes]);
+                setNodes(prev => {
+                    const rootNode = prev.find(node => node.id === 'n1') || getInitialNodeData()[0];
+                    return [rootNode, ...newNodes];
+                });
                 setEdges(newEdges);
 
             } catch (error) {

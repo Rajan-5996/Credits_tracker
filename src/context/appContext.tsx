@@ -11,6 +11,7 @@ export interface AppContextType {
     dataLoading: boolean;
     loader2: boolean;
     userTableData: () => Promise<Array<{ User_ID: string, Name: string, Status: string, credits: number }>>;
+    getTotalConsumption: () => Promise<number>;
     getUserCredits: (userId: string) => Promise<number | { totalCredits: number; name: string }>;
     resetLoader2: () => void;
 }
@@ -34,7 +35,8 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             setLoading(false);
         }
 
-        return String(res?.rows?.[0]?.[1] ?? 0);
+        const total = res?.rows?.reduce((acc, row) => acc + (Number(row[1]) || 0), 0) ?? 0;
+        return String(total);
     }, []);
 
     const topCreditUsers = useCallback(async (): Promise<Array<{ User_ID: string, total_credits: number }>> => {
@@ -99,6 +101,20 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         }
     }, []);
 
+    const getTotalConsumption = useCallback(async (): Promise<number> => {
+        try {
+            const res = await domo.post(
+                '/sql/v1/creditstrackertable',
+                'SELECT SUM(total_credits_used) FROM dataAlias',
+                { contentType: 'text/plain' }
+            ) as DomoResponse;
+            return Number(res?.rows?.[0]?.[0] ?? 0);
+        } catch (error) {
+            console.error('getTotalConsumption error:', error);
+            return 0;
+        }
+    }, []);
+
     const getUserCredits = useCallback(async (userId: string): Promise<number | { totalCredits: number, name: string }> => {
         try {
             const res = await domo.post(
@@ -144,10 +160,11 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
             dataLoading: loading,
             loader2,
             userTableData,
+            getTotalConsumption,
             getUserCredits,
             resetLoader2,
         };
-    }, [domainCredits, topCreditUsers, lowCreditUsers, loading, loader2, userTableData, getUserCredits, resetLoader2]);
+    }, [domainCredits, topCreditUsers, lowCreditUsers, loading, loader2, userTableData, getTotalConsumption, getUserCredits, resetLoader2]);
 
     return (
         <AppContext.Provider
@@ -157,4 +174,3 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
         </AppContext.Provider>
     );
 };
-

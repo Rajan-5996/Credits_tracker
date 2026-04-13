@@ -2,7 +2,8 @@ import { CardsContext } from "@/context/cardsContext";
 import { nodeTypes } from "@/components/custom_node/cards_node/root_node";
 import { usePoweredCardGraph } from "@/hooks/usePoweredCardGraph";
 import { useCallback, useContext, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react";
-import { Background, BackgroundVariant, Controls, ReactFlow, type Node } from "@xyflow/react";
+import { Background, BackgroundVariant, Controls, ReactFlow, type Node, ReactFlowProvider } from "@xyflow/react";
+import { Loader2 } from "lucide-react";
 
 const DOMO_BASE_URL = "https://gwcteq-partner.domo.com";
 
@@ -10,7 +11,7 @@ interface PoweredCardNodeData extends Record<string, unknown> {
     pageId?: string;
 }
 
-const PoweredCard = ({ datasetId }: { datasetId: string }) => {
+const PoweredCardInner = ({ datasetId }: { datasetId: string }) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const cardsContext = useContext(CardsContext);
@@ -30,12 +31,19 @@ const PoweredCard = ({ datasetId }: { datasetId: string }) => {
 
     useEffect(() => {
         const onFullscreenChange = () => {
-            setIsFullscreen(document.fullscreenElement === containerRef.current);
+            const isFull = document.fullscreenElement === containerRef.current
+            setIsFullscreen(isFull);
+            if (reactFlowInstance.current) {
+                setTimeout(() => {
+                    reactFlowInstance.current.fitView({ padding: 0.15, duration: 500 });
+                }, 100);
+            }
         };
 
         document.addEventListener("fullscreenchange", onFullscreenChange);
         return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
     }, []);
+
 
     const toggleFullscreen = useCallback(async () => {
         const el = containerRef.current;
@@ -62,21 +70,25 @@ const PoweredCard = ({ datasetId }: { datasetId: string }) => {
         globalThis.window.open(`${DOMO_BASE_URL}/page/${encodeURIComponent(pageId)}`, "_blank", "noopener,noreferrer");
     }, []);
 
+    const reactFlowInstance = useRef<any>(null);
+
     return (
         <div
             ref={containerRef}
-            className="relative w-full"
-            style={{ backgroundColor: "#f5f5f5", height: "100%", minHeight: "320px" }}
+            className={`group relative w-full ${isFullscreen ? 'h-[100vh] bg-[#fafafa] rounded-none' : 'h-full min-h-[450px] bg-[#fafafa] rounded-2xl border border-primary/10 shadow-inner'} overflow-hidden flex flex-col`}
         >
-            <button
-                type="button"
-                onClick={() => {
-                    void toggleFullscreen();
-                }}
-                className="absolute right-3 top-3 z-20 rounded-md border border-border bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm backdrop-blur hover:bg-background"
-            >
-                {isFullscreen ? "Exit Full Screen" : "Full Screen"}
-            </button>
+            <div className="absolute top-4 right-4 z-20 flex items-center gap-2">
+                <button
+                    type="button"
+                    onClick={() => {
+                        void toggleFullscreen();
+                    }}
+                    className="px-4 py-2 bg-white/90 backdrop-blur border border-primary/10 rounded-xl text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary hover:bg-white hover:scale-105 transition-all shadow-lg active:scale-95"
+                >
+                    {isFullscreen ? "Exit Full Screen" : "Full Screen"}
+                </button>
+            </div>
+
             <ReactFlow
                 key={datasetId}
                 className="h-full w-full"
@@ -85,34 +97,56 @@ const PoweredCard = ({ datasetId }: { datasetId: string }) => {
                 edges={edges}
                 nodeTypes={nodeTypes}
                 onNodeClick={handleNodeClick}
+                onInit={(instance) => { reactFlowInstance.current = instance; }}
                 fitView
-                fitViewOptions={{ maxZoom: 1, padding: 0.2 }}
+                fitViewOptions={{ maxZoom: 1, padding: 0.15 }}
                 nodesDraggable
                 nodesConnectable={false}
                 elementsSelectable={false}
             >
                 <Background
-                    color="#7030B1"
-                    variant={BackgroundVariant.Cross}
-                    style={{ opacity: 0.12 }}
+                    color="oklch(var(--primary))"
+                    variant={BackgroundVariant.Dots}
+                    style={{ opacity: 0.05 }}
+                    gap={20}
                 />
-                <Controls />
+                <Controls className="!bg-white !border-primary/10 !shadow-lg !rounded-xl overflow-hidden" />
             </ReactFlow>
 
             {(isLoading || contextLoading) && (
-                <div className="absolute bottom-3 left-3 z-20 rounded-md border border-border bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
-                    Loading powered cards...
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-white/60 backdrop-blur-sm">
+                    <Loader2 size={24} className="animate-spin text-primary/60 mb-3" />
+                    <p className="text-[10px] font-black text-primary/40 uppercase tracking-[0.2em]">Synchronizing card nodes...</p>
                 </div>
             )}
 
             {!isLoading && !contextLoading && cardRows.length === 0 && (
-                <div className="absolute bottom-3 left-3 z-20 rounded-md border border-border bg-background/95 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-sm">
-                    No powered cards found for this dataset.
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center p-8 text-center bg-primary/5">
+                    <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/30 mb-3">
+                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p className="text-[11px] font-black text-primary/60 uppercase tracking-[0.2em]">No powered cards</p>
+                        <p className="mt-1 text-[10px] font-medium text-primary/40 leading-relaxed max-w-[240px]">
+                            This dataset is not currently powering any visualizations.
+                        </p>
+                    </div>
                 </div>
             )}
         </div>
     )
 }
 
+const PoweredCard = (props: { datasetId: string }) => {
+    return (
+        <ReactFlowProvider>
+            <PoweredCardInner {...props} />
+        </ReactFlowProvider>
+    );
+};
+
 export default PoweredCard
+
 

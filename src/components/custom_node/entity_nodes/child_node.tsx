@@ -6,74 +6,29 @@ import { formatCompactNumber } from "@/lib/utils";
 
 const ChildNode = ({ data }: { data: any }) => {
     return (
-        <div
-            style={{
-                background: "#ffffff",
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                padding: "10px 16px",
-                fontFamily: "'Roboto', sans-serif",
-                minWidth: "160px",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "#cbd5e1";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "#e2e8f0";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.06)";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-            }}
-        >
+        <div className="group relative min-w-[380px] bg-white rounded-xl p-9 transition-all duration-500 hover:scale-[1.05] hover:shadow-2xl hover:border-primary/30 cursor-pointer border border-primary/20 overflow-hidden shadow-xl">
+            <div className="absolute top-0 left-0 w-2.5 h-full bg-primary/10 group-hover:bg-primary transition-colors" />
+            
             <Handle
                 type="target"
                 position={Position.Left}
-                style={{
-                    background: "#94a3b8",
-                    width: 8,
-                    height: 8,
-                    border: "2px solid #fff",
-                    left: -4,
-                    borderRadius: "50%",
-                }}
+                className="!w-5 !h-5 !bg-primary !border-4 !border-white !shadow-2xl !-left-2.5"
             />
 
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "3px",
-                    padding: "2px 0",
-                }}
-            >
-                <div
-                    style={{
-                        fontSize: "11px",
-                        fontWeight: "600",
-                        color: "#64748b",
-                        lineHeight: 1.2,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.05em",
-                    }}
-                >
-                    {data.label === "RYUU_APP" ? `${data.label} [Custom Apps]` : data.label}
-                </div>
-                <div
-                    style={{
-                        fontSize: "17px",
-                        fontWeight: "700",
-                        color: "#1a73e8",
-                        marginTop: "2px",
-                    }}
-                >
-                    {formatCompactNumber(data.credits)} <span style={{ fontSize: "10px", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>credits</span>
+            <div className="flex flex-col gap-4 text-left pl-5">
+                <span className="text-[11px] font-black text-primary/50 capitalize tracking-[0.2em] font-sans">
+                    {data.label === "RYUU_APP" ? "Production cluster" : "Intelligence cluster"}
+                </span>
+                <span className="text-2xl font-black text-foreground capitalize tracking-tight leading-tight truncate">
+                    {data.label}
+                </span>
+                <div className="flex items-center gap-5 pt-5 border-t border-primary/10 mt-2">
+                    <span className="text-5xl font-black text-foreground font-heading tracking-tight gwc-text-gradient leading-none">
+                        {formatCompactNumber(data.credits)}
+                    </span>
+                    <div className="px-5 py-2 rounded-full bg-primary/5 border border-primary/10 shadow-sm shrink-0">
+                        <span className="text-[10px] font-black text-primary capitalize tracking-widest leading-none">Credits</span>
+                    </div>
                 </div>
             </div>
         </div>

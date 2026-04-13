@@ -1,4 +1,5 @@
 import { Handle, Position } from "@xyflow/react";
+import { motion } from "framer-motion";
 
 const CardsChildNode = ({
     data,
@@ -8,64 +9,57 @@ const CardsChildNode = ({
     selected?: boolean;
 }) => {
     return (
-        <div
-            style={{
-                background: "#ffffff",
-                border: selected ? "2px solid #1a73e8" : "1px solid #e2e8f0",
-                borderRadius: "6px",
-                padding: "8px 12px",
-                minWidth: 180,
-                boxShadow: selected ? "0 4px 12px rgba(26,115,232,0.15)" : "0 1px 2px rgba(0,0,0,0.04)",
-                fontFamily: "'Roboto', sans-serif",
-                transition: "all 0.2s ease",
-                cursor: "pointer",
-            }}
-            onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = "#cbd5e1";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(-1px)";
-            }}
-            onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.borderColor = selected ? "#1a73e8" : "#e2e8f0";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = selected ? "0 4px 12px rgba(26,115,232,0.15)" : "0 1px 2px rgba(0,0,0,0.04)";
-                (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
-            }}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={`
+                relative px-5 py-4 min-w-[220px] transition-all duration-300
+                bg-white rounded-[1.25rem] shadow-[0_10px_30px_-5px_rgba(0,0,0,0.05)] border-2
+                ${selected ? "border-primary shadow-xl shadow-primary/10 -translate-y-1" : "border-primary/5"}
+                hover:border-primary/20 hover:shadow-xl hover:-translate-y-1 group
+            `}
         >
-            <div style={{ fontSize: 11, color: "#64748b", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 2 }}>
-                {data?.subtitle || "Page"}
-            </div>
-            <div style={{ fontSize: 13, color: "#1e293b", fontWeight: 600 }}>
-                {data?.title || "Unknown"}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/5 via-primary/20 to-primary/5 rounded-t-[1.25rem] opacity-0 group-hover:opacity-100 transition-opacity" />
+            
+            <div className="flex flex-col gap-1.5">
+                <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+                    <span className="text-[9px] font-black text-primary/40 uppercase tracking-[0.2em] leading-none">
+                        {data?.subtitle || "Endpoint"}
+                    </span>
+                </div>
+                
+                <h3 className="text-[13px] font-black text-foreground font-heading tracking-tight leading-snug capitalize">
+                    {data?.title || "Operational Node"}
+                </h3>
             </div>
 
             <Handle
                 type="target"
+                id="target-left"
                 position={Position.Left}
-                style={{
-                    background: "#94a3b8",
-                    width: 8,
-                    height: 8,
-                    left: -4,
-                    border: "2px solid #fff",
-                    borderRadius: "50%",
-                }}
+                className="w-3 h-3 bg-white border-2 border-primary !-left-1.5 shadow-md hover:scale-125 transition-transform"
             />
             {!data?.hideSource && (
                 <Handle
                     type="source"
+                    id="source-right"
                     position={Position.Right}
-                    style={{
-                        background: "#94a3b8",
-                        width: 8,
-                        height: 8,
-                        right: -4,
-                        border: "2px solid #fff",
-                        borderRadius: "50%",
-                    }}
+                    className="w-3 h-3 bg-white border-2 border-primary !-right-1.5 shadow-md hover:scale-125 transition-transform"
                 />
             )}
-        </div>
+            
+            <div className="mt-3 pt-3 border-t border-primary/5 flex items-center justify-between">
+                <div className="flex gap-1">
+                    {[1, 2, 3].map(i => (
+                        <div key={i} className="w-1.5 h-0.5 rounded-full bg-primary/10" />
+                    ))}
+                </div>
+                <div className="text-[8px] font-black text-primary/20 uppercase tracking-widest">Active</div>
+            </div>
+        </motion.div>
     )
 }
 
 export default CardsChildNode
+

@@ -99,14 +99,14 @@ const useUserItem = (userId: number) => {
             const leftMetrics = metrics.slice(0, 2);
             const rightMetrics = metrics.slice(2);
 
-            const leftStartY = 170;
-            const rightStartY = 170;
-            const gapY = 170;
+            const leftStartY = 160;
+            const rightStartY = 160;
+            const gapY = 150;
 
             const leftNodes: Node<NodeData>[] = leftMetrics.map((metric, index) => ({
                 id: metric.key,
                 type: "childNode",
-                position: { x: -500, y: leftStartY + index * gapY },
+                position: { x: -420, y: leftStartY + index * gapY },
                 style: { zIndex: 2 },
                 data: {
                     label: metric.label,
@@ -123,7 +123,7 @@ const useUserItem = (userId: number) => {
             const rightNodes: Node<NodeData>[] = rightMetrics.map((metric, index) => ({
                 id: metric.key,
                 type: "childNode",
-                position: { x: 260, y: rightStartY + index * gapY },
+                position: { x: 220, y: rightStartY + index * gapY },
                 style: { zIndex: 2 },
                 data: {
                     label: metric.label,
@@ -146,9 +146,9 @@ const useUserItem = (userId: number) => {
                 target: node.id,
                 targetHandle: "target-right",
                 animated: true,
-                zIndex: 0,
-                markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
-                style: { stroke: "#cbd5e1", strokeWidth: 1.5 },
+                zIndex: 10,
+                markerEnd: { type: MarkerType.ArrowClosed, color: '#94a3b8' },
+                style: { stroke: "#cbd5e1", strokeWidth: 2 },
             }));
 
             const rightEdges: Edge[] = rightNodes.map((node) => ({
@@ -158,9 +158,9 @@ const useUserItem = (userId: number) => {
                 target: node.id,
                 targetHandle: "target-left",
                 animated: true,
-                zIndex: 0,
-                markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
-                style: { stroke: "#cbd5e1", strokeWidth: 1.5 },
+                zIndex: 10,
+                markerEnd: { type: MarkerType.ArrowClosed, color: '#94a3b8' },
+                style: { stroke: "#cbd5e1", strokeWidth: 2 },
             }));
 
             const childEdges: Edge[] = [...leftEdges, ...rightEdges];

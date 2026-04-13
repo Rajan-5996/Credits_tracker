@@ -1,20 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Inter:wght@100..900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    /* Switching to Roboto for strict enterprise clarity */
-    --font-heading: 'Roboto', sans-serif;
-    --font-sans: 'Roboto', sans-serif;
-    --font-outfit: 'Roboto', sans-serif;
-
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
+    --font-heading: 'Outfit', sans-serif;
+    --font-sans: 'Inter', sans-serif;
 
     --color-ring: var(--ring);
     --color-input: var(--input);
@@ -35,83 +27,113 @@
     --color-foreground: var(--foreground);
     --color-background: var(--background);
 
-    --radius-sm: var(--radius);
-    --radius-md: var(--radius);
-    --radius-lg: var(--radius);
-    --radius-xl: var(--radius);
-    --radius-2xl: var(--radius);
+    --animate-spin-slow: spin 8s linear infinite;
 }
 
+
 :root {
-    /* Enterprise Tech Theme (AWS/GCP Inspired) */
-    --background: oklch(0.98 0 0); /* #f8f9fa or solid gray-50 */
-    --foreground: oklch(0.20 0 0); /* Blackish #202124 */
+    /* GWC Data Color Palette */
+    --primary: oklch(35% 0.18 300);
+    /* #6F2B8B - Deep Branded Purple */
+    --primary-foreground: oklch(100% 0 0);
 
-    --card: oklch(1 0 0); /* Crisp white */
-    --card-foreground: oklch(0.20 0 0);
+    --accent: oklch(65% 0.22 45);
+    /* #F26722 - Vibrant Branded Orange */
+    --accent-foreground: oklch(100% 0 0);
 
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.20 0 0);
+    --background: oklch(98% 0.01 280);
+    /* Very light lavender tint */
+    --foreground: oklch(20% 0.05 300);
+    /* Very dark purple/neutral */
 
-    /* Primary: GCP Blue #1a73e8 */
-    --primary: oklch(0.55 0.18 250); 
-    --primary-foreground: oklch(1 0 0); /* white */
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(20% 0.05 300);
 
-    /* Secondary: Light gray */
-    --secondary: oklch(0.96 0 0); /* f1f5f9 */
-    --secondary-foreground: oklch(0.35 0 0);
+    --secondary: oklch(94% 0.04 300);
+    /* Soft Lavender */
+    --secondary-foreground: oklch(35% 0.18 300);
 
-    --muted: oklch(0.96 0 0);
-    --muted-foreground: oklch(0.55 0 0);
+    --muted: oklch(96% 0.02 300);
+    --muted-foreground: oklch(50% 0.05 300);
 
-    /* Accent: AWS-like dark selection */
-    --accent: oklch(0.96 0 0);
-    --accent-foreground: oklch(0.20 0 0);
+    --border: oklch(92% 0.03 300);
+    --input: oklch(92% 0.03 300);
+    --ring: oklch(35% 0.18 300);
 
-    --destructive: oklch(0.50 0.20 25); /* Sharp structural red */
-    --border: oklch(0.90 0 0); /* e5e7eb border-gray-200 */
-    --input: oklch(0.90 0 0);
-    --ring: oklch(0.55 0.18 250);
-
-    --chart-1: oklch(0.55 0.18 250); /* Blue */
-    --chart-2: oklch(0.70 0.15 45); /* Orange */
-    --chart-3: oklch(0.60 0.15 150); /* Green */
-    --chart-4: oklch(0.40 0.12 300); /* Purple */
-    --chart-5: oklch(0.50 0.15 200); /* Cyan */
-
-    --radius: 0.125rem; /* Ultra sharp 2px rounding like GCP */
+    --radius: 0.75rem;
+    /* Sophisticated executive rounding */
 }
 
 @layer base {
     * {
-        @apply border-border outline-ring/50;
+        @apply border-border outline-ring/50 transition-colors duration-300;
     }
 
     body {
-        @apply bg-[#f8f9fa] text-[#202124];
-        @apply font-sans antialiased;
+        @apply bg-background text-foreground overflow-hidden;
+        @apply font-sans antialiased selection:bg-primary selection:text-white;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-heading tracking-tight;
     }
 }
 
 @layer utilities {
-    .glass-morphism {
-        @apply bg-white border border-gray-200 shadow-none rounded-sm;
-    }
-    
-    .text-brand-gradient {
-        @apply text-[#1a73e8];
+    .gwc-gradient {
+        background: linear-gradient(135deg, #6F2B8B 0%, #a855f7 50%, #F26722 100%);
     }
 
-    .bg-brand-gradient {
-        @apply bg-[#1a73e8];
+    .gwc-text-gradient {
+        background: linear-gradient(135deg, #6F2B8B 0%, #a855f7 50%, #F26722 100%);
+        @apply bg-clip-text text-transparent;
     }
 
-    /* Utilitarian shadow mapping */
-    .shadow-sm {
-        box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3),0 1px 3px 1px rgba(60,64,67,0.15);
+    .glass-console {
+        @apply bg-white/60 backdrop-blur-2xl border border-white/40 shadow-[0_32px_64px_-16px_rgba(111,43,139,0.1)];
     }
 
-    .shadow-md {
-        box-shadow: 0 1px 3px 0 rgba(60,64,67,0.3),0 4px 8px 3px rgba(60,64,67,0.15);
+    .pill-button {
+        @apply rounded-full px-8 py-3 font-black uppercase tracking-[0.2em] text-[10px] transition-all duration-500 hover:scale-105 active:scale-95 shadow-lg;
     }
+
+    .card-shadow {
+        @apply shadow-[0_20px_50px_rgba(111,43,139,0.08)];
+    }
+
+    .executive-card {
+        @apply bg-white border border-primary/5 rounded-[2.5rem] p-8 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.08)] transition-all duration-500 hover:shadow-[0_50px_80px_-20px_rgba(111,43,139,0.15)] hover:scale-[1.01];
+    }
+
+    .glass-card {
+        @apply bg-white/60 backdrop-blur-2xl border border-white/40 shadow-xl;
+    }
+
+    .inner-glow {
+        @apply shadow-[inset_0_2px_15px_rgba(111,43,139,0.05)];
+    }
+
+    .mask-linear-right {
+        mask-image: linear-gradient(to right, black 85%, transparent 100%);
+    }
+
+    .mask-linear-left {
+        mask-image: linear-gradient(to left, black 85%, transparent 100%);
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-secondary/30;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-primary/20 rounded-full hover:bg-primary/40;
 }

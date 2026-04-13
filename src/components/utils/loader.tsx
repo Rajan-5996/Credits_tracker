@@ -1,91 +1,76 @@
-const keyframes = `
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-`;
-
-const shimmer = {
-    background: "linear-gradient(90deg, rgba(112,48,177,0.05) 25%, rgba(112,48,177,0.1) 50%, rgba(112,48,177,0.05) 75%)",
-    backgroundSize: "200% 100%",
-    animation: "shimmer 2s infinite linear",
-};
-
-const box = (extra = {}) => ({
-    ...shimmer,
-    borderRadius: 12,
-    ...extra,
-});
-
-const circle = (size: number) => ({
-    ...shimmer,
-    borderRadius: "50%",
-    width: size,
-    height: size,
-    flexShrink: 0,
-});
-
-export default function SkeletonLoader() {
+const SkeletonLoader = () => {
     return (
-        <>
-            <style>{keyframes}</style>
-            <div
-                style={{
-                    background: "#fdfbff",
-                    minHeight: "100vh",
-                    display: "flex",
-                    flexDirection: "column",
-                    fontFamily: "'Montserrat', sans-serif",
-                }}
-            >
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        padding: "12px 16px",
-                        borderBottom: "1px solid rgba(112,48,177,0.1)",
-                        background: "white",
-                        maxWidth: "1580px",
-                        margin: "0 auto",
-                        width: "100%",
-                    }}
-                >
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <div style={box({ width: 35, height: 35, borderRadius: 8 })} />
-                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                            <div style={box({ width: 140, height: 14 })} />
-                            <div style={box({ width: 200, height: 10 })} />
-                        </div>
-                    </div>
+        <div className="min-h-screen w-full bg-background overflow-hidden relative">
+            {/* Background Gradients */}
+            <div className="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] bg-primary/5 rounded-full blur-[120px]" />
+            <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-accent/5 rounded-full blur-[100px]" />
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                        <div style={box({ width: 36, height: 36, borderRadius: 10 })} />
-                        <div style={circle(40)} />
+            {/* Nav Skeleton */}
+            <div className="h-20 w-full border-b border-primary/5 bg-white/50 backdrop-blur-3xl flex items-center justify-between px-10">
+                <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-primary/10 animate-pulse" />
+                    <div className="space-y-2">
+                        <div className="w-32 h-3 bg-primary/10 rounded-full animate-pulse" />
+                        <div className="w-20 h-2 bg-primary/5 rounded-full animate-pulse" />
                     </div>
                 </div>
-
-                <div
-                    style={{
-                        padding: "16px 8px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 16,
-                        maxWidth: "1580px",
-                        margin: "0 auto",
-                        width: "100%",
-                    }}
-                >
-                    <div style={{ display: "flex", gap: 16 }}>
-                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
-                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
-                        <div style={box({ flex: 1, height: 256, borderRadius: 24 })} />
-                    </div>
-                    <div style={box({ width: "100%", height: 720, borderRadius: 24, marginTop: 12 })} />
-                    <div style={box({ width: "100%", height: 64, borderRadius: 12, marginTop: 12 })} />
-                    <div style={box({ width: "100%", height: 520, borderRadius: 24, marginTop: 12 })} />
+                <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-full bg-primary/5 animate-pulse" />
+                    <div className="w-24 h-10 rounded-full bg-primary/5 animate-pulse" />
                 </div>
             </div>
-        </>
+
+            <main className="max-w-[1600px] mx-auto p-10 space-y-10">
+                {/* Header Strip */}
+                <div className="flex justify-between items-end">
+                    <div className="space-y-3">
+                        <div className="w-64 h-8 bg-primary/10 rounded-lg animate-pulse" />
+                        <div className="w-40 h-3 bg-primary/5 rounded-full animate-pulse" />
+                    </div>
+                    <div className="w-72 h-10 bg-primary/5 rounded-full animate-pulse" />
+                </div>
+
+                {/* KPI Grid Skeleton */}
+                <div className="grid grid-cols-4 gap-6">
+                    {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="h-56 glass-console rounded-[2rem] border-none p-8 space-y-4">
+                            <div className="w-10 h-10 rounded-xl bg-primary/10 animate-pulse" />
+                            <div className="space-y-2 pt-2">
+                                <div className="w-full h-3 bg-primary/5 rounded-full animate-pulse" />
+                                <div className="w-1/2 h-8 bg-primary/10 rounded-lg animate-pulse" />
+                                <div className="w-2/3 h-2 bg-primary/5 rounded-full animate-pulse" />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Network Skeleton */}
+                <div className="w-full h-[600px] glass-console rounded-[3rem] border-none p-10 flex flex-col gap-6">
+                    <div className="flex justify-between items-center">
+                        <div className="flex gap-4">
+                            <div className="w-12 h-12 rounded-xl bg-primary/10 animate-pulse" />
+                            <div className="space-y-2">
+                                <div className="w-48 h-6 bg-primary/10 rounded-lg animate-pulse" />
+                                <div className="w-32 h-2 bg-primary/5 rounded-full animate-pulse" />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex-1 w-full bg-primary/5 rounded-[2rem] animate-pulse" />
+                </div>
+
+                {/* Registry Header */}
+                <div className="flex justify-between px-4">
+                    <div className="w-40 h-5 bg-primary/10 rounded-full animate-pulse" />
+                    <div className="w-32 h-8 bg-primary/10 rounded-full animate-pulse" />
+                </div>
+
+                {/* Registry Table Skeleton */}
+                <div className="w-full h-80 glass-console rounded-[2rem] border-none p-4 opacity-50">
+                    <div className="w-full h-full bg-primary/5 rounded-[1.5rem] animate-pulse" />
+                </div>
+            </main>
+        </div>
     );
-}
+};
+
+export default SkeletonLoader;

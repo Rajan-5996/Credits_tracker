@@ -1,85 +1,67 @@
-import { useState } from "react"
-import { ChevronDown, Filter } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { AnimatePresence, motion } from "framer-motion"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { LayoutGrid, Check } from "lucide-react"
 
-type ActionFilterProps = {
-    value: string
-    onChange: (value: string) => void
+const options = [
+    { label: "Global inventory", value: "all" },
+    { label: "Active nodes", value: "active" },
+    { label: "Dormant nodes", value: "inactive" },
+]
+
+const getStatusColor = (status: string) => {
+    switch (status) {
+        case 'active': return '#10b981';
+        case 'inactive': return '#ef4444';
+        default: return '#6F2B8B';
+    }
 }
 
-const ActionFilter = ({ value, onChange }: ActionFilterProps) => {
-    const [isOpen, setIsOpen] = useState(false)
-
-    const filterOptions = [
-        { value: "all", label: "All Status" },
-        { value: "active", label: "Active" },
-        { value: "inactive", label: "Inactive" },
-    ]
-
-    const selectedOption = filterOptions.find(opt => opt.value === value)
-
-    const getStatusColor = (val: string) => {
-        if (val === "active") return "#10b981"
-        if (val === "inactive") return "#ef4444"
-        return "transparent"
-    }
-
-    const handleSelect = (val: string) => {
-        onChange(val)
-        setIsOpen(false)
-    }
+const ActionFilter = ({ value, onChange }: { value: string, onChange: (val: string) => void }) => {
+    const selectedOption = options.find(o => o.value === value)
 
     return (
-        <div className="relative z-50 w-full min-w-44">
-            <Button
-                onClick={() => setIsOpen(!isOpen)}
-                variant="outline"
-                className="w-full h-12 justify-between rounded-2xl border-border bg-white/60 backdrop-blur-md hover:bg-white/80 transition-all focus:ring-4 focus:ring-primary/10 px-4"
-            >
-                <div className="flex items-center gap-2.5">
-                    <Filter className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-semibold text-foreground tracking-tight">{selectedOption?.label}</span>
-                </div>
-                <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
-            </Button>
-
-            <AnimatePresence>
-                {isOpen && (
-                    <>
-                        <div 
-                            className="fixed inset-0 z-40" 
-                            onClick={() => setIsOpen(false)} 
-                        />
-                        <motion.div 
-                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                            className="absolute z-50 top-full mt-2 w-full rounded-2xl border border-border bg-white/95 shadow-2xl backdrop-blur-xl overflow-hidden p-1.5"
-                        >
-                            {filterOptions.map((option) => (
-                                <button
-                                    key={option.value}
-                                    onClick={() => handleSelect(option.value)}
-                                    className={`flex w-full items-center px-3 py-2.5 text-sm font-bold rounded-xl transition-all border ${value === option.value
-                                        ? "bg-primary/20 text-primary border-primary/30 shadow-sm backdrop-blur-md"
-                                        : "hover:bg-white/20 text-foreground/70 border-transparent"
-                                        }`}
-                                >
-                                    <div
-                                        className={`w-2 h-2 rounded-full mr-2.5 ${value === option.value ? 'bg-white' : ''}`}
-                                        style={{ backgroundColor: value === option.value ? undefined : getStatusColor(option.value) }}
-                                    />
-                                    {option.label}
-                                </button>
-                            ))}
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
-        </div>
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <button
+                    className="flex items-center justify-between w-full h-11 px-6 rounded-full glass-console border-none shadow-lg bg-white/70 backdrop-blur-2xl hover:bg-white/95 hover:shadow-xl transition-all duration-300 group"
+                >
+                    <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 rounded-lg bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all">
+                            <LayoutGrid size={14} />
+                        </div>
+                        <span className="text-[11px] font-black text-foreground capitalize tracking-widest">{selectedOption?.label}</span>
+                    </div>
+                </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 glass-console rounded-[1.5rem] border-none p-2 shadow-2xl animate-in fade-in zoom-in duration-300 translate-y-3">
+                {options.map((option) => (
+                    <DropdownMenuItem
+                        key={option.value}
+                        onClick={() => onChange(option.value)}
+                        className={`
+                            flex items-center justify-between px-4 py-3 rounded-xl mb-1 last:mb-0 cursor-pointer transition-all duration-200
+                            ${value === option.value 
+                                ? "bg-primary text-white border-primary shadow-lg shadow-primary/20" 
+                                : "hover:bg-primary/5 text-muted-foreground hover:text-primary"}
+                        `}
+                    >
+                        <div className="flex items-center gap-3">
+                            <div 
+                                className={`w-2 h-2 rounded-full ${value === option.value ? 'bg-white shadow-[0_0_8px_white]' : ''}`} 
+                                style={{ backgroundColor: value === option.value ? undefined : getStatusColor(option.value) }}
+                            />
+                            <span className="text-[10px] font-black capitalize tracking-widest">{option.label}</span>
+                        </div>
+                        {value === option.value && <Check size={12} className="text-white" />}
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
+        </DropdownMenu>
     )
 }
 
 export default ActionFilter
-

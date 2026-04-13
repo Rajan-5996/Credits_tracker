@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { applyNodeChanges, type Edge, type Node, type NodeChange } from "@xyflow/react";
+import { applyNodeChanges, MarkerType, type Edge, type Node, type NodeChange } from "@xyflow/react";
 import type { CardItem } from "@/context/cardsContext";
 
-const CARD_GAP_Y = 96;
-const ROOT_X = 110;
-const CARDS_X = 520;
-const PAGES_X = 1000;
-const ROOT_BASE_Y = 100;
+const CARD_GAP_Y = 220;
+const ROOT_X = 0;
+const CARDS_X = 380;
+const PAGES_X = 760;
+const ROOT_BASE_Y = 50;
 const edgeColor = "#cbd5e1";
 
 const cardDataCache = new Map<string, CardItem[]>();
@@ -133,7 +133,7 @@ export const usePoweredCardGraph = ({
             draggable: false,
             data: {
                 title: String(datasetId),
-                subtitle: "Dataset ID",
+                subtitle: "Source dataset",
             },
         };
 
@@ -144,7 +144,7 @@ export const usePoweredCardGraph = ({
             draggable: true,
             data: {
                 title: card.title,
-                subtitle: "Powered Card",
+                subtitle: "Analyzed card",
             },
         }));
 
@@ -155,7 +155,7 @@ export const usePoweredCardGraph = ({
             draggable: true,
             data: {
                 title: page.name,
-                subtitle: "Page",
+                subtitle: "Destination page",
                 hideSource: true,
                 pageId: page.pageId,
             },
@@ -176,6 +176,7 @@ export const usePoweredCardGraph = ({
 
     const edges = useMemo<Edge[]>(() => {
         const graphEdges: Edge[] = [];
+        const markerEnd = { type: MarkerType.ArrowClosed, color: edgeColor };
 
         cards.forEach((card) => {
             graphEdges.push({
@@ -184,6 +185,7 @@ export const usePoweredCardGraph = ({
                 target: `card-${card.id}`,
                 style: { stroke: edgeColor, strokeWidth: 1.5 },
                 animated: true,
+                markerEnd,
             });
         });
 
@@ -204,9 +206,10 @@ export const usePoweredCardGraph = ({
             graphEdges.push({
                 id: `card-to-page-${cardId}-${pageKey}`,
                 source: `card-${cardId}`,
-                style: { stroke: edgeColor, strokeWidth: 1.5 },
                 target: `page-${pageKey}`,
+                style: { stroke: edgeColor, strokeWidth: 1.5 },
                 animated: true,
+                markerEnd,
             });
         });
 

@@ -1,81 +1,134 @@
-import { CustomPanel, Loader2 } from "@/components";
+import { CustomPanel } from "@/components";
 import { nodeTypes } from "@/components/custom_node/user_nodes/root_node";
-import { AppContext } from "@/context/appContext";
 import useUserItem from "@/hooks/useUserItem";
-import { Panel, ReactFlow, type Node, type ReactFlowInstance } from "@xyflow/react";
-import { useContext, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import { Panel, ReactFlow, type Node, type ReactFlowInstance, Background, BackgroundVariant, useNodesInitialized, ReactFlowProvider } from "@xyflow/react";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { useParams } from "react-router-dom"
+import { TbFocusCentered } from "react-icons/tb";
+import { motion, AnimatePresence } from "framer-motion";
 
-export interface UserNodeData extends Record<string, unknown> {
-    label: string;
-    description?: string;
-    value?: string;
-    activeCount?: number;
-    inactiveCount?: number;
-    side?: "left" | "right";
-}
-
-const UserItems = () => {
-    const { userId } = useParams();
+const UserItemsContent = ({ userId }: { userId: string }) => {
     const flowRef = useRef<ReactFlowInstance<any, any> | null>(null);
-    const app = useContext(AppContext);
     const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+    const nodesInitialized = useNodesInitialized();
+    const [hasFitted, setHasFitted] = useState(false);
 
     const { nodes, edges, onNodesChange } = useUserItem(Number(userId));
 
     const selectedNode = useMemo(() => {
-        return nodes.find((node) => node.id === selectedNodeId) as Node<UserNodeData> | undefined;
+        return nodes.find((node) => node.id === selectedNodeId) as Node<any> | undefined;
     }, [nodes, selectedNodeId]);
 
     useEffect(() => {
-        setSelectedNodeId(null);
-    }, [userId]);
-
-    useEffect(() => {
-        if (!flowRef.current || nodes.length === 0) {
-            return;
+        if (flowRef.current && nodesInitialized && !hasFitted && nodes.length > 0) {
+            const timer = setTimeout(() => {
+                flowRef.current?.fitView({ padding: 0.2, duration: 1000, maxZoom: 1 });
+                setHasFitted(true);
+            }, 300);
+            return () => clearTimeout(timer);
         }
+    }, [nodesInitialized, nodes.length, hasFitted]);
 
-        const frame = globalThis.requestAnimationFrame(() => {
-            flowRef.current?.fitView({ maxZoom: 1, padding: 0.2, duration: 0 });
-        });
-
-        return () => globalThis.cancelAnimationFrame(frame);
-    }, [nodes.length]);
-
-    if (app?.loader2) {
-        return <Loader2 />
-    }
-
-    const handleNodeClick = (_event: MouseEvent, node: Node<UserNodeData>) => {
+    const handleNodeClick = (_event: MouseEvent, node: Node<any>) => {
         if (node.id === "root") {
             setSelectedNodeId(null);
             return;
         }
-
         setSelectedNodeId(node.id);
     };
 
     return (
-        <div style={{ width: '100%', height: '100vh', padding: 0, margin: 0, display: 'block', position: 'relative' }}>
-            <ReactFlow
-                onInit={(instance) => {
-                    flowRef.current = instance;
-                }}
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onNodeClick={handleNodeClick}
-                onPaneClick={() => setSelectedNodeId(null)}
-                fitView
-                fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}
-                nodeTypes={nodeTypes}
-            >
-                <Panel position="top-left">
-                    <CustomPanel selectedNode={selectedNode} setSelectedNodeId={setSelectedNodeId} userId={userId ?? ""} />
-                </Panel>
-            </ReactFlow>
+        <div className="relative w-full h-full flex flex-col overflow-hidden bg-background">
+            <div className="flex-1 w-full relative z-10 bg-[#fafafc]/50">
+                {nodes.length === 0 ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-5">
+                        <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                        <p className="text-xs font-black text-primary/40 capitalize tracking-[0.2em]">Synchronizing local node data...</p>
+                    </div>
+                ) : (
+                    <ReactFlow
+                        onInit={(instance) => {
+                            flowRef.current = instance;
+                        }}
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onNodeClick={handleNodeClick}
+                        onPaneClick={() => setSelectedNodeId(null)}
+                        nodeTypes={nodeTypes}
+                        minZoom={0.2}
+                        maxZoom={2}
+                        zoomOnScroll={true}
+                        panOnScroll={false}
+                        panOnDrag={true}
+                    >
+                        <Background
+                            color="#6F2B8B"
+                            gap={40}
+                            size={1}
+                            variant={BackgroundVariant.Dots}
+                            style={{ opacity: 0.1 }}
+                        />
+
+                        <Panel position="top-right" className="m-4 z-[70]">
+                            <button
+                                onClick={() => {
+                                    setHasFitted(false);
+                                    flowRef.current?.fitView({ duration: 800, padding: 0.2 });
+                                }}
+                                className="h-10 px-6 rounded-full gwc-gradient text-[10px] font-black text-white capitalize tracking-widest shadow-xl hover:scale-105 transition-all flex items-center gap-2"
+                            >
+                                <TbFocusCentered size={14} />
+                                Auto Fit
+                            </button>
+                        </Panel>
+
+                        <Panel position="top-left" className="!m-0 w-full sm:w-[450px] lg:w-[480px] pointer-events-none z-[70]">
+                            <div className="pointer-events-auto mt-4 ml-4">
+                                <AnimatePresence mode="wait">
+                                    <motion.div
+                                        key={selectedNodeId || "default"}
+                                        initial={{ x: -20, opacity: 0 }}
+                                        animate={{ x: 0, opacity: 1 }}
+                                        exit={{ x: -20, opacity: 0 }}
+                                        transition={{ duration: 0.4 }}
+                                    >
+                                        <CustomPanel selectedNode={selectedNode} setSelectedNodeId={setSelectedNodeId} userId={userId ?? ""} />
+                                    </motion.div>
+                                </AnimatePresence>
+                            </div>
+                        </Panel>
+                    </ReactFlow>
+                )}
+            </div>
+
+            {/* Legend/Status bar */}
+            <footer className="relative z-[60] bg-white/80 backdrop-blur-3xl border-t border-primary/5 px-8 py-3 flex items-center justify-between">
+                <div className="flex items-center gap-10">
+                    <div className="flex items-center gap-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_10px_var(--sidebar-primary)]" />
+                        <span className="text-[10px] font-black text-primary capitalize tracking-widest">Master Node</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <div className="w-2.5 h-2.5 rounded-full bg-accent shadow-[0_0_10px_var(--sidebar-accent)]" />
+                        <span className="text-[10px] font-black text-accent capitalize tracking-widest">Peripheral Node</span>
+                    </div>
+                </div>
+                <p className="text-[10px] font-black text-primary/30 capitalize tracking-[0.3em] hidden sm:block">
+                    Grid isolation protocol V.4.2 active | Adaptive viewport tracking
+                </p>
+            </footer>
         </div>
+    );
+};
+
+const UserItems = () => {
+    const { userId } = useParams();
+
+    return (
+        <ReactFlowProvider>
+            <UserItemsContent userId={userId ?? ""} />
+        </ReactFlowProvider>
     )
 }
 

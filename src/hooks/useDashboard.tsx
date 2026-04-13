@@ -17,9 +17,9 @@ export type DomoResponse = {
     columns: string[];
 };
 
-const MID_COL_X = 280;
-const LEAF_COL_X = 560;
-const GAP_Y = 100;
+const MID_COL_X = 450;
+const LEAF_COL_X = 900;
+const GAP_Y = 280; // Optimized spacing for maximum data density
 const MID_COUNT = 5;
 
 export const useDashboard = () => {
@@ -34,9 +34,9 @@ export const useDashboard = () => {
             style: { zIndex: 2 },
             id: 'n1',
             type: 'creditNode',
-            position: { x: -120, y: 250 },
+            position: { x: -150, y: 250 },
             data: {
-                label: "Instance",
+                label: "Intelligence instance",
                 description: "https://gwcteq-partner.domo.com/",
                 credits: credits,
             },
@@ -129,8 +129,8 @@ export const useDashboard = () => {
                         target: nodeId,
                         animated: true,
                         zIndex: 0,
-                        markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
-                        style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
+                        markerEnd: { type: MarkerType.Arrow, color: '#6F2B8B' },
+                        style: { stroke: '#6F2B8B', strokeWidth: 1.5, opacity: 0.3 },
                     });
                 });
 
@@ -157,8 +157,8 @@ export const useDashboard = () => {
                         target: nodeId,
                         animated: true,
                         zIndex: 0,
-                        markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
-                        style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
+                        markerEnd: { type: MarkerType.Arrow, color: '#F26722' },
+                        style: { stroke: '#F26722', strokeWidth: 1.5, opacity: 0.3 },
                     });
                 });
 

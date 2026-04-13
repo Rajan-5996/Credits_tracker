@@ -147,8 +147,8 @@ const useUserItem = (userId: number) => {
                 targetHandle: "target-right",
                 animated: true,
                 zIndex: 0,
-                markerEnd: { type: MarkerType.Arrow },
-                style: { stroke: "#7030B1", strokeWidth: 1.5 },
+                markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
+                style: { stroke: "#cbd5e1", strokeWidth: 1.5 },
             }));
 
             const rightEdges: Edge[] = rightNodes.map((node) => ({
@@ -159,8 +159,8 @@ const useUserItem = (userId: number) => {
                 targetHandle: "target-left",
                 animated: true,
                 zIndex: 0,
-                markerEnd: { type: MarkerType.Arrow },
-                style: { stroke: "#7030B1", strokeWidth: 1.5 },
+                markerEnd: { type: MarkerType.Arrow, color: '#94a3b8' },
+                style: { stroke: "#cbd5e1", strokeWidth: 1.5 },
             }));
 
             const childEdges: Edge[] = [...leftEdges, ...rightEdges];

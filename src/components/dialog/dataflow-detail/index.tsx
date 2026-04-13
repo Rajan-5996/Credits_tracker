@@ -8,7 +8,6 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { DataflowLineageContext } from "@/context/dataflow_lineage";
 import type { DataflowRecord } from "@/types/details_type";
 import {
     Database,
@@ -18,15 +17,14 @@ import {
     FileText,
     ExternalLink,
 } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import Lineage from "./Lineage";
 
 export function DataflowDetailDialog({
     data,
 }: Readonly<{ data: DataflowRecord }>) {
-    const dataflow = useContext(DataflowLineageContext);
     const [open, setOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("overview");
-    const loadedLineageFor = useRef<number | null>(null);
     const lastExecutedLabel = data.last_executed_date
         ? new Date(data.last_executed_date).toLocaleString()
         : "N/A";
@@ -41,32 +39,6 @@ export function DataflowDetailDialog({
         { label: "Last Run", value: lastExecutedLabel, icon: <Clock size={12} className="text-primary" /> },
         { label: "Updated", value: lastUpdatedLabel, icon: <CalendarClock size={12} className="text-primary" /> },
     ];
-
-    useEffect(() => {
-        const lineageContext = dataflow;
-
-        if (!open || activeTab !== "lineage" || !lineageContext) {
-            return;
-        }
-
-        const dataflowId = Number(data.id);
-
-        if (loadedLineageFor.current === dataflowId) {
-            return;
-        }
-
-        async function fetchLineage() {
-            try {
-                const lineageData = await lineageContext!.getLineageData(dataflowId);
-                loadedLineageFor.current = dataflowId;
-                console.log('Lineage Data:', lineageData);
-            } catch (error) {
-                console.error("Error fetching lineage data:", error);
-            }
-        }
-
-        fetchLineage();
-    }, [activeTab, data.id, dataflow, open]);
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -147,13 +119,7 @@ export function DataflowDetailDialog({
                         value="lineage"
                         className="mt-0 min-h-0 flex-1 overflow-y-auto px-6 pb-6 pt-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                     >
-                        <div className="flex h-44 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-primary/20 bg-secondary/20">
-                            <GitBranch size={18} className="text-primary/35" />
-                            <p className="text-[13px] font-semibold text-foreground/65">Lineage coming soon</p>
-                            <p className="max-w-55 text-center text-[11.5px] leading-relaxed text-muted-foreground">
-                                Upstream and downstream connections will appear once lineage data is available.
-                            </p>
-                        </div>
+                        <Lineage dataflowId={Number(data.id)} isActive={open && activeTab === "lineage"} />
                     </TabsContent>
                 </Tabs>
 

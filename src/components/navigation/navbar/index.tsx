@@ -24,71 +24,85 @@ const NavBar = () => {
     const toggleFullscreen = async () => {
         try {
             if (!document.fullscreenElement) {
-                await document.documentElement.requestFullscreen();
+                const elem = document.documentElement as HTMLElement & {
+                    mozRequestFullScreen?: () => Promise<void>;
+                    webkitRequestFullscreen?: () => Promise<void>;
+                    msRequestFullscreen?: () => Promise<void>;
+                };
+                if (elem.requestFullscreen) {
+                    await elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    await elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    await elem.msRequestFullscreen();
+                }
                 return;
             }
 
-            await document.exitFullscreen();
+            const doc = document as Document & {
+                mozCancelFullScreen?: () => Promise<void>;
+                webkitExitFullscreen?: () => Promise<void>;
+                msExitFullscreen?: () => Promise<void>;
+            };
+            if (doc.exitFullscreen) {
+                await doc.exitFullscreen();
+            } else if (doc.webkitExitFullscreen) {
+                await doc.webkitExitFullscreen();
+            } else if (doc.msExitFullscreen) {
+                await doc.msExitFullscreen();
+            }
         } catch (error) {
             console.error("Unable to toggle fullscreen mode", error);
         }
     };
 
     return (
-        <header className="sticky top-0 z-100 w-full border-b border-white/20 bg-white/70 backdrop-blur-xl shadow-sm">
-            <nav className="mx-auto flex h-18 w-full max-w-395 items-center justify-between px-1 sm:px-2">
-                <div className="flex justify-center items-center gap-2">
+        <header className="sticky top-0 z-[100] w-full border-b border-b-[#1a232e] bg-[#232f3e] shadow-sm">
+            <nav className="flex h-14 w-full items-center justify-between px-4">
+                <div className="flex justify-center items-center gap-4">
                     {
                         location?.pathname !== "/" && (
-                            <div onClick={() => navigate(-1)} className="flex items-center gap-2 px-6 py-2 border-r-2 border-primary/20 cursor-pointer transition-all duration-300 hover:bg-primary/5 hover:border-primary/40 active:scale-95 group">
-                                <GiFastBackwardButton className="text-primary/70 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300" />
-                                <span className="font-medium text-foreground/80 group-hover:text-primary transition-colors duration-300">Back</span>
-                            </div>
+                            <button onClick={() => navigate(-1)} className="flex items-center gap-2 group hover:bg-[#2a384a] px-2 py-1 rounded text-[#aab7c4] hover:text-white transition-colors duration-200">
+                                <GiFastBackwardButton />
+                                <span className="font-medium text-xs tracking-wide">Back</span>
+                            </button>
                         )
                     }
-                    <div className="flex min-w-0 items-center gap-4">
+                    <div className="flex min-w-0 items-center gap-3">
                         <img
                             src="/Logo.svg"
                             alt="GWC Data.ai Logo"
-                            className="object-contain"
-                            height={35}
-                            width={35}
+                            className="object-contain brightness-0 invert opacity-90"
+                            height={24}
+                            width={24}
                         />
-                        <div className="min-w-0 flex flex-col">
-                            <h1 className="truncate text-lg font-semibold tracking-tighter text-foreground sm:text-xl uppercase leading-none">
-                                GWC <span className="text-primary font-semibold">Data.ai</span>
+                        <div className="min-w-0 flex flex-col justify-center translate-y-0.5">
+                            <h1 className="truncate text-[13px] font-bold tracking-wide text-[#f2f3f3] uppercase leading-none">
+                                GWC <span className="text-[#ff9900] font-bold">Data.ai</span> Console
                             </h1>
-                            <a
-                                href="https://gwcteq-partner.domo.com/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="hidden text-[9px] font-bold text-primary/60 hover:text-primary sm:block tracking-wide truncate transition-colors decoration-primary underline-offset-2"
-                            >
-                                gwcteq-partner.domo.com
-                            </a>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-3">
                     <button
                         type="button"
                         onClick={toggleFullscreen}
                         aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-                        className="grid h-10 w-10 cursor-pointer place-items-center rounded-xl border border-border bg-white text-muted-foreground shadow-sm transition-all hover:bg-secondary hover:text-primary active:scale-90"
+                        className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-transparent text-[#aab7c4] hover:bg-[#2a384a] hover:text-white transition-colors"
                     >
-                        {isFullscreen ? <TbArrowsMinimize size={20} /> : <TbArrowsMaximize size={20} />}
+                        {isFullscreen ? <TbArrowsMinimize size={18} /> : <TbArrowsMaximize size={18} />}
                     </button>
 
                     <button
                         type="button"
-                        className="hidden items-center gap-3 rounded-2xl border border-border bg-white px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition-all hover:bg-secondary hover:border-primary/20 sm:flex group"
+                        className="hidden items-center gap-2 rounded bg-transparent hover:bg-[#2a384a] px-2 py-1.5 text-xs font-semibold text-[#f2f3f3] transition-colors sm:flex"
                     >
                         <div className="relative">
-                            <img src={userContext?.avatarKey} alt={displayName} className="h-6.5 w-6.5 rounded-lg border border-primary/20" />
-                            <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-green-500 border-2 border-white" />
+                            <img src={userContext?.avatarKey} alt={displayName} className="h-6 w-6 rounded bg-[#232f3e]" />
+                            <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full bg-green-500 border border-[#232f3e]" />
                         </div>
-                        <span className="group-hover:text-primary transition-colors">{displayName}</span>
+                        <span>{displayName}</span>
                     </button>
                 </div>
             </nav>

@@ -5,26 +5,46 @@ const CardsRootNode = ({ data, selected }: { data?: { title?: string; subtitle?:
     return (
         <div
             style={{
+                position: "relative",
                 background: "#ffffff",
-                border: selected ? "2px solid #7030B1" : "1px solid rgba(112, 48, 177, 0.28)",
-                borderRadius: 16,
-                padding: "12px 16px",
-                minWidth: 220,
-                boxShadow: "0 10px 24px rgba(112, 48, 177, 0.08)",
-                fontFamily: "'Montserrat', sans-serif",
+                border: selected ? "2px solid #1a73e8" : "1px solid #e2e8f0",
+                borderRadius: "6px",
+                padding: "10px 14px",
+                minWidth: 200,
+                boxShadow: selected ? "0 4px 12px rgba(26,115,232,0.15)" : "0 1px 3px rgba(0,0,0,0.06)",
+                fontFamily: "'Roboto', sans-serif",
+                transition: "all 0.2s ease",
             }}
         >
-            <div style={{ fontSize: 12, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.06em", fontWeight: 700 }}>
+            {/* Top accent bar */}
+            <div style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "3px",
+                background: "#ff9900",
+                borderRadius: "6px 6px 0 0",
+            }} />
+
+            <div style={{ fontSize: 11, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", fontWeight: 600, marginTop: 2 }}>
                 {data?.subtitle || "Dataset"}
             </div>
-            <div style={{ fontSize: 15, color: "#111827", fontWeight: 800, marginTop: 4 }}>
+            <div style={{ fontSize: 14, color: "#1e293b", fontWeight: 700, marginTop: 2 }}>
                 {data?.title || "Unknown dataset"}
             </div>
 
             <Handle
                 type="source"
                 position={Position.Right}
-                style={{ background: "#7030B1", width: 10, height: 10, right: -5, border: "2px solid #fff" }}
+                style={{
+                    background: "#94a3b8",
+                    width: 8,
+                    height: 8,
+                    right: -4,
+                    border: "2px solid #fff",
+                    borderRadius: "50%",
+                }}
             />
         </div>
     )
@@ -36,4 +56,3 @@ export const nodeTypes = {
     cardsNode: CardsRootNode,
     cardschildNode: CardsChildNode,
 };
-

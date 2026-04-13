@@ -7,7 +7,7 @@ const ROOT_X = 110;
 const CARDS_X = 520;
 const PAGES_X = 1000;
 const ROOT_BASE_Y = 100;
-const primary = "var(--primary)";
+const edgeColor = "#cbd5e1";
 
 const cardDataCache = new Map<string, CardItem[]>();
 const inFlightRequests = new Map<string, Promise<CardItem[]>>();
@@ -182,7 +182,7 @@ export const usePoweredCardGraph = ({
                 id: `dataset-to-card-${card.id}`,
                 source: "dataset-root",
                 target: `card-${card.id}`,
-                style: { stroke: primary, strokeWidth: 2 },
+                style: { stroke: edgeColor, strokeWidth: 1.5 },
                 animated: true,
             });
         });
@@ -204,7 +204,7 @@ export const usePoweredCardGraph = ({
             graphEdges.push({
                 id: `card-to-page-${cardId}-${pageKey}`,
                 source: `card-${cardId}`,
-                style: { stroke: primary, strokeWidth: 2 },
+                style: { stroke: edgeColor, strokeWidth: 1.5 },
                 target: `page-${pageKey}`,
                 animated: true,
             });

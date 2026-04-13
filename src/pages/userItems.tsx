@@ -2,7 +2,7 @@ import { CustomPanel, Loader2 } from "@/components";
 import { nodeTypes } from "@/components/custom_node/user_nodes/root_node";
 import { AppContext } from "@/context/appContext";
 import useUserItem from "@/hooks/useUserItem";
-import { Background, BackgroundVariant, Panel, ReactFlow, type Node, type ReactFlowInstance } from "@xyflow/react";
+import { Panel, ReactFlow, type Node, type ReactFlowInstance } from "@xyflow/react";
 import { useContext, useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
 import { useParams } from "react-router-dom"
 
@@ -57,7 +57,7 @@ const UserItems = () => {
     };
 
     return (
-        <div style={{ width: '100%', height: '100vh', background: 'transparent', display: 'block' }}>
+        <div style={{ width: '100%', height: '100vh', padding: 0, margin: 0, display: 'block', position: 'relative' }}>
             <ReactFlow
                 onInit={(instance) => {
                     flowRef.current = instance;
@@ -71,11 +71,6 @@ const UserItems = () => {
                 fitViewOptions={{ maxZoom: 1, padding: 0.2, duration: 0 }}
                 nodeTypes={nodeTypes}
             >
-                <Background
-                    color="#7030B1"
-                    variant={BackgroundVariant.Cross}
-                    style={{ opacity: 0.12 }}
-                />
                 <Panel position="top-left">
                     <CustomPanel selectedNode={selectedNode} setSelectedNodeId={setSelectedNodeId} userId={userId ?? ""} />
                 </Panel>
@@ -85,4 +80,3 @@ const UserItems = () => {
 }
 
 export default UserItems
-

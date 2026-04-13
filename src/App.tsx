@@ -15,12 +15,14 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
+      <div className="flex flex-col h-screen overflow-hidden bg-background">
         <NavBar />
-        <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/user-items/:userId" element={<UserItems />} />
-        </Routes>
+        <div className="flex-1 overflow-y-auto transition-all duration-300">
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/user-items/:userId" element={<UserItems />} />
+          </Routes>
+        </div>
       </div>
     </Router>
   );

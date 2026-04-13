@@ -10,58 +10,56 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
     return (
         <div
             style={{
-                background: "white",
-                border: selected
-                    ? "2px solid #7030B1"
-                    : "1px solid rgba(112, 48, 177, 0.2)",
-                borderRadius: "24px",
                 width: 280,
-                boxShadow: selected
-                    ? "0 12px 40px rgba(112, 48, 177, 0.15), 0 4px 12px rgba(112, 48, 177, 0.05)"
-                    : "0 8px 24px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02)",
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Roboto', sans-serif",
+                background: "#ffffff",
+                border: selected ? "2px solid #1a73e8" : "1px solid #e2e8f0",
+                borderRadius: "6px",
                 overflow: "hidden",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-                backdropFilter: "blur(12px)",
+                boxShadow: selected
+                    ? "0 4px 12px rgba(26,115,232,0.15)"
+                    : "0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04)",
+                transition: "all 0.2s ease",
             }}
         >
+            {/* Top accent bar */}
+            <div style={{ height: 3, background: "linear-gradient(90deg, #1a73e8, #ff9900)" }} />
+
+            {/* Header */}
             <div
                 style={{
                     display: "flex",
                     alignItems: "center",
                     gap: "12px",
-                    padding: "16px 20px",
-                    borderBottom: "1px solid rgba(112, 48, 177, 0.1)",
-                    background: "rgba(112, 48, 177, 0.02)",
+                    padding: "12px 14px",
+                    borderBottom: "1px solid #f1f5f9",
                 }}
             >
                 <div
                     style={{
-                        width: 44,
-                        height: 44,
-                        borderRadius: "14px",
-                        background: "linear-gradient(135deg, #7030B1 0%, #B56DD3 100%)",
+                        width: 38,
+                        height: 38,
+                        borderRadius: "6px",
+                        background: "#1a73e8",
                         flexShrink: 0,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 4px 12px rgba(112, 48, 177, 0.3)",
                     }}
                 >
-                    <img src="/Logo.svg" alt={data.label} height={26} width={26} style={{ filter: "brightness(0) invert(1)" }} />
+                    <img src="/Logo.svg" alt={data.label} height={20} width={20} style={{ filter: "brightness(0) invert(1)" }} />
                 </div>
 
                 <div style={{ minWidth: 0 }}>
                     <div
                         style={{
-                            fontSize: "16px",
+                            fontSize: "14px",
                             fontWeight: "700",
                             color: "#1e293b",
                             lineHeight: 1.2,
                             whiteSpace: "nowrap",
                             overflow: "hidden",
                             textOverflow: "ellipsis",
-                            letterSpacing: "-0.01em",
                         }}
                     >
                         {data.label || "Node Name"}
@@ -69,10 +67,9 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
                     <div
                         style={{
                             fontSize: "11px",
-                            color: "#64748b",
-                            marginTop: "2px",
+                            color: "#94a3b8",
+                            marginTop: "3px",
                             fontWeight: 500,
-                            opacity: 0.8,
                         }}
                     >
                         {data.description || "Node description"}
@@ -80,23 +77,25 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
                 </div>
             </div>
 
+            {/* Credits Display */}
             <div
                 style={{
-                    margin: "12px",
-                    background: "rgba(112, 48, 177, 0.03)",
-                    borderRadius: "16px",
-                    padding: "14px",
+                    margin: "10px 12px 12px",
+                    background: "#f8fafc",
+                    borderRadius: "6px",
+                    padding: "10px",
                     textAlign: "center",
-                    border: "1px solid rgba(112, 48, 177, 0.05)",
+                    border: "1px solid #f1f5f9",
                 }}
             >
-                <div style={{ fontSize: "10px", color: "#64748b", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "4px" }}>Available Credits</div>
+                <div style={{ fontSize: "10px", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "4px" }}>
+                    Available Credits
+                </div>
                 <span
                     style={{
                         fontSize: "24px",
-                        fontWeight: "900",
-                        color: "#7030B1",
-                        letterSpacing: "-0.02em",
+                        fontWeight: "800",
+                        color: "#1a73e8",
                     }}
                 >
                     {formatCompactNumber(data.credits || 0)}
@@ -107,17 +106,17 @@ const CreditNode = ({ data, selected }: { data: any; selected: boolean }) => {
                 type="source"
                 position={Position.Right}
                 style={{
-                    background: "#7030B1",
-                    width: 10,
-                    height: 10,
+                    background: "#94a3b8",
+                    width: 8,
+                    height: 8,
                     border: "2px solid #fff",
-                    right: -5,
+                    right: -4,
+                    borderRadius: "50%",
                 }}
             />
         </div>
     );
 };
-
 
 export default CreditNode;
 
@@ -125,4 +124,3 @@ export const nodeTypes = {
     creditNode: CreditNode,
     childNode: ChildNode,
 };
-
